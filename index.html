@@ -223,7 +223,6 @@
 
     <div class="action-buttons">
       <button type="button" onclick="addRow()">➕ Add Row</button>
-      <button type="button" onclick="saveData()">💾 Save</button>
       <button type="button" onclick="submitForm()">📤 Submit / Export PDF</button>
     </div>
 
@@ -347,8 +346,9 @@
         ];
       });
 
-      const tableWidth = 700; // approximate width of table content
+      // Calculate table width and center it
       const pageWidth = doc.internal.pageSize.getWidth();
+      const tableWidth = 700;
       const startX = (pageWidth - tableWidth) / 2;
 
       doc.autoTable({
