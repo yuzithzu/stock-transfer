@@ -722,59 +722,49 @@
       });
 
       // Define table options for stock items with proper column widths
-      const tableOptions = {
-        startY: doc.lastAutoTable.finalY + 30,
-        head: [headers],
-        body: rows,
-        theme: "grid",
-        styles: {
-          fontSize: 8,
-          cellPadding: { top: 4, right: 4, bottom: 4, left: 4 },
-          overflow: "linebreak",
-          valign: "top",
-          lineColor: [180, 180, 180],
-          lineWidth: 0.2
-        },
-        columnStyles: {
-          0: { cellWidth: 60 },
-          1: { cellWidth: 100 },
-          2: { cellWidth: 60, halign: "center" },
-          3: { cellWidth: 60, halign: "center" },
-          4: { cellWidth: 60, halign: "center" },
-          5: { cellWidth: 40, halign: "center" },
-          6: { cellWidth: 60, halign: "center" },
-          7: { cellWidth: 120 }
-        },
-        headStyles: {
-          fillColor: [43, 61, 82],
-          textColor: 255,
-          fontStyle: "bold",
-          halign: "center",
-          lineWidth: 0.2
-        },
-        margin: { left: 30, right: 30 },
-        bodyStyles: { 
-          lineWidth: 0.1,
-          fillColor: [255, 255, 255]
-        },
-        alternateRowStyles: {
-          fillColor: [248, 249, 250]
-        },
-        didParseCell: function(data) {
-          // Apply special styling to Qty Requested column (column index 4)
-          if (data.column.index === 4) {
-            data.cell.styles.fillColor = [255, 248, 225];
-            data.cell.styles.textColor = [231, 76, 60];
-            data.cell.styles.fontStyle = "bold";
-          }
-        },
-        // Handle multi-page tables
-        pageBreak: 'auto',
-        tableWidth: 'wrap'
-      };
+      (function() {
+        const colWidths = {0:60,1:180,2:50,3:60,4:60,5:40,6:50,7:160};
+        const totalDesiredWidth = Object.values(colWidths).reduce((a,b)=>a+b,0);
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageMargin = 40;
+        const maxUsableWidth = pageWidth - (pageMargin*2);
 
-      // Generate the stock items table
-      doc.autoTable(tableOptions);
+        let scaleFactor = 1;
+        if (totalDesiredWidth > maxUsableWidth) scaleFactor = maxUsableWidth / totalDesiredWidth;
+
+        const finalColWidths = {};
+        Object.keys(colWidths).forEach(k=>finalColWidths[k]=Math.floor(colWidths[k]*scaleFactor));
+
+        const columnStyles = {};
+        for(const idx in finalColWidths){
+          columnStyles[idx]={cellWidth:finalColWidths[idx],halign:(idx>=2&&idx<=6)?"center":"left"};
+        }
+
+        const tableOptions = {
+          startY: doc.lastAutoTable.finalY + 30,
+          head:[headers],
+          body:rows,
+          theme:"grid",
+          styles:{fontSize:8,cellPadding:4,overflow:"linebreak",valign:"top",lineColor:[180,180,180],lineWidth:0.2},
+          columnStyles:columnStyles,
+          headStyles:{fillColor:[43,61,82],textColor:255,fontStyle:"bold",halign:"center"},
+          tableWidth:Object.values(finalColWidths).reduce((a,b)=>a+b,0),
+          margin:{left:(pageWidth-Object.values(finalColWidths).reduce((a,b)=>a+b,0))/2},
+          bodyStyles:{fillColor:[255,255,255]},
+          alternateRowStyles:{fillColor:[248,249,250]},
+          didParseCell:function(data){
+            if(data.column.index===4){
+              data.cell.styles.fillColor=[255,248,225];
+              data.cell.styles.textColor=[231,76,60];
+              data.cell.styles.fontStyle="bold";
+            }
+          },
+          pageBreak:'auto'
+        };
+        
+        // Only call autoTable once with the correct options
+        doc.autoTable(tableOptions);
+      })();
 
       // Footer
       doc.setFontSize(10);
