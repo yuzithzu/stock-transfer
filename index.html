@@ -98,12 +98,13 @@
       width: 100%;
       border-collapse: collapse;
       margin: 0 auto;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     th,
     td {
       border: 1px solid #dee2e6;
-      padding: 8px;
+      padding: 10px 12px;
       font-size: 13px;
       vertical-align: top;
       word-wrap: break-word;
@@ -114,11 +115,17 @@
       background-color: #2b3d52;
       color: white;
       text-transform: uppercase;
-      font-size: 12.5px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
     }
 
     tr:nth-child(even) {
       background-color: #f8f9fa;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #ffffff;
     }
 
     td input,
@@ -128,6 +135,7 @@
       background: transparent;
       resize: vertical;
       font-size: 13px;
+      padding: 5px;
     }
 
     td input:focus,
@@ -153,10 +161,12 @@
       font-size: 14px;
       cursor: pointer;
       transition: 0.3s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     button:hover {
       background-color: #1f2c3d;
+      transform: translateY(-2px);
     }
 
     .footer {
@@ -168,6 +178,12 @@
     .footer div {
       width: 50%;
       min-width: 250px;
+    }
+
+    .validation-error {
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 5px;
     }
 
     @media print {
@@ -189,11 +205,13 @@
     <div class="form-header">
       <div>
         <label for="branch">🏢 Branch:</label>
-        <input type="text" id="branch" placeholder="Enter branch name" />
+        <input type="text" id="branch" placeholder="Enter branch name" required />
+        <div id="branchError" class="validation-error"></div>
       </div>
       <div>
         <label for="date">📅 Date of Request:</label>
-        <input type="date" id="date" />
+        <input type="date" id="date" required />
+        <div id="dateError" class="validation-error"></div>
       </div>
       <div>
         <label>🚚 Mode of Transfer:</label>
@@ -203,6 +221,7 @@
           <label><input type="checkbox" name="transfer" value="Air" /> Air</label>
           <label><input type="checkbox" name="transfer" value="Others" /> Others</label>
         </div>
+        <div id="transferError" class="validation-error"></div>
       </div>
     </div>
 
@@ -223,13 +242,14 @@
 
     <div class="action-buttons">
       <button type="button" onclick="addRow()">➕ Add Row</button>
-      <button type="button" onclick="submitForm()">📤 Submit / Export PDF</button>
+      <button type="button" onclick="validateAndSubmit()">📤 Submit / Export PDF</button>
     </div>
 
     <div class="footer">
       <div>
         <label for="preparedBy">Prepared by:</label>
-        <input type="text" id="preparedBy" placeholder="Name of preparer" />
+        <input type="text" id="preparedBy" placeholder="Name of preparer" required />
+        <div id="preparedByError" class="validation-error"></div>
       </div>
     </div>
   </form>
@@ -241,11 +261,11 @@
       const tbody = document.querySelector("#stockTable tbody");
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td><input type="text" value="${data.stock_code || ""}"></td>
-        <td><input type="text" value="${data.product_description || ""}"></td>
-        <td><input type="text" value="${data.qty_onhand || ""}"></td>
-        <td><input type="text" value="${data.qty_requested || ""}"></td>
-        <td><input type="text" value="${data.uom || ""}"></td>
+        <td><input type="text" value="${data.stock_code || ""}" required></td>
+        <td><input type="text" value="${data.product_description || ""}" required></td>
+        <td><input type="text" value="${data.qty_onhand || ""}" required></td>
+        <td><input type="text" value="${data.qty_requested || ""}" required></td>
+        <td><input type="text" value="${data.uom || ""}" required></td>
         <td><textarea rows="3">${data.remarks || ""}</textarea></td>
         <td><button type="button" onclick="removeRow(this)">🗑 Remove</button></td>
       `;
@@ -255,6 +275,69 @@
     function removeRow(btn) {
       btn.closest("tr").remove();
       autoSave();
+    }
+
+    function validateForm() {
+      let isValid = true;
+      const errors = {
+        branch: document.getElementById("branchError"),
+        date: document.getElementById("dateError"),
+        transfer: document.getElementById("transferError"),
+        preparedBy: document.getElementById("preparedByError")
+      };
+
+      // Clear previous errors
+      Object.values(errors).forEach(error => error.textContent = "");
+
+      // Validate branch
+      const branch = document.getElementById("branch").value.trim();
+      if (!branch) {
+        errors.branch.textContent = "Branch is required";
+        isValid = false;
+      }
+
+      // Validate date
+      const date = document.getElementById("date").value;
+      if (!date) {
+        errors.date.textContent = "Date is required";
+        isValid = false;
+      }
+
+      // Validate transfer method
+      const transferChecked = document.querySelectorAll('input[name="transfer"]:checked');
+      if (transferChecked.length === 0) {
+        errors.transfer.textContent = "At least one transfer method is required";
+        isValid = false;
+      }
+
+      // Validate prepared by
+      const preparedBy = document.getElementById("preparedBy").value.trim();
+      if (!preparedBy) {
+        errors.preparedBy.textContent = "Prepared by is required";
+        isValid = false;
+      }
+
+      // Validate table rows
+      const rows = document.querySelectorAll("#stockTable tbody tr");
+      if (rows.length === 0) {
+        alert("Please add at least one row to the table");
+        isValid = false;
+      } else {
+        rows.forEach((row, index) => {
+          const inputs = row.querySelectorAll("input[required]");
+          inputs.forEach(input => {
+            if (!input.value.trim()) {
+              isValid = false;
+              // Highlight empty fields
+              input.style.borderColor = "#e74c3c";
+            } else {
+              input.style.borderColor = "#ccc";
+            }
+          });
+        });
+      }
+
+      return isValid;
     }
 
     function collectData() {
@@ -306,35 +389,95 @@
       document.querySelectorAll("input, textarea").forEach((el) => el.addEventListener("input", autoSave));
     }
 
-    // ✅ PDF Export with centered table
+    // ✅ PDF Export with perfect centering and enhanced design
+    function validateAndSubmit() {
+      if (validateForm()) {
+        submitForm();
+      }
+    }
+
     function submitForm() {
       saveData();
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+      const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
 
-      doc.setFontSize(16);
-      doc.text("COMPLETE SOLUTION PHARMACY", 420, 40, { align: "center" });
-      doc.setFontSize(13);
-      doc.text("STOCK TRANSFER FORM", 420, 60, { align: "center" });
-
-      const data = collectData();
+      // Title
+      doc.setFontSize(18);
+      doc.setTextColor(43, 61, 82);
+      doc.text("COMPLETE SOLUTION PHARMACY", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
+      
+      doc.setFontSize(14);
+      doc.text("STOCK TRANSFER FORM", doc.internal.pageSize.getWidth() / 2, 60, { align: "center" });
+      
+      // Form details in table format
       doc.setFontSize(10);
-      doc.text(`Branch: ${data.branch}`, 100, 80);
-      doc.text(`Date of Request: ${data.date}`, 300, 80);
-      doc.text(`Mode of Transfer: ${data.transfer.join(", ")}`, 550, 80);
+      doc.setTextColor(0, 0, 0);
+      
+      const data = collectData();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      
+      // Create a table for form details
+      const detailsHeaders = ["Field", "Value"];
+      const detailsRows = [
+        ["Branch", data.branch],
+        ["Date of Request", data.date],
+        ["Mode of Transfer", data.transfer.join(", ")]
+      ];
+      
+      // Calculate table dimensions
+      const tableWidth = 400;
+      const startX = (pageWidth - tableWidth) / 2;
+      const startY = 90;
+      
+      // Define table options for form details
+      const detailsTableOptions = {
+        startY: startY,
+        head: [detailsHeaders],
+        body: detailsRows,
+        theme: "grid",
+        styles: {
+          fontSize: 9,
+          cellPadding: { top: 6, right: 6, bottom: 6, left: 6 },
+          overflow: "linebreak",
+          valign: "top",
+          lineColor: [180, 180, 180],
+          lineWidth: 0.2
+        },
+        columnStyles: {
+          0: { cellWidth: 120 },
+          1: { cellWidth: 280 }
+        },
+        headStyles: {
+          fillColor: [43, 61, 82],
+          textColor: 255,
+          fontStyle: "bold",
+          halign: "center",
+          lineWidth: 0.2
+        },
+        margin: { left: startX, right: startX },
+        bodyStyles: { 
+          lineWidth: 0.1,
+          fillColor: [255, 255, 255]
+        }
+      };
 
+      // Generate the form details table
+      doc.autoTable(detailsTableOptions);
+      
+      // Table headers
       const headers = [
         "Stock Code",
         "Product Description",
         "Qty Onhand",
         "Qty Requested",
         "UOM",
-        "Remarks",
+        "Remarks"
       ];
 
+      // Table data
       const rows = data.rows.map((r) => {
         const wrappedRemarks = r.remarks
-          ? r.remarks.replace(/(.{1,90})(\s+|$)/g, "$1\n").trim()
+          ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim()
           : "";
         return [
           r.stock_code,
@@ -342,46 +485,63 @@
           r.qty_onhand,
           r.qty_requested,
           r.uom,
-          wrappedRemarks,
+          wrappedRemarks
         ];
       });
 
-      // Calculate table width and center it
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const tableWidth = 700;
-      const startX = (pageWidth - tableWidth) / 2;
+      // Calculate table dimensions and center it properly
+      const availableWidth = pageWidth - 100; // Leave margins
+      const tableWidth2 = Math.min(availableWidth, 700); // Max width 700pt
+      const startXTable = (pageWidth - tableWidth2) / 2;
+      const startY2 = doc.lastAutoTable.finalY + 20;
 
-      doc.autoTable({
-        startY: 100,
+      // Define table options for stock items
+      const tableOptions = {
+        startY: startY2,
         head: [headers],
         body: rows,
         theme: "grid",
         styles: {
           fontSize: 9,
-          cellPadding: { top: 4, right: 4, bottom: 4, left: 4 },
+          cellPadding: { top: 8, right: 8, bottom: 8, left: 8 },
           overflow: "linebreak",
           valign: "top",
-          lineColor: [200, 200, 200],
+          lineColor: [180, 180, 180],
+          lineWidth: 0.2
         },
         columnStyles: {
           0: { cellWidth: 70 },
-          1: { cellWidth: 100 },
-          2: { cellWidth: 60, halign: "center" },
+          1: { cellWidth: 110 },
+          2: { cellWidth: 70, halign: "center" },
           3: { cellWidth: 70, halign: "center" },
           4: { cellWidth: 50, halign: "center" },
-          5: { cellWidth: 250 },
+          5: { cellWidth: 150 } // Reduced width to prevent overflow
         },
         headStyles: {
           fillColor: [43, 61, 82],
           textColor: 255,
           fontStyle: "bold",
           halign: "center",
+          lineWidth: 0.2
         },
-        margin: { left: startX },
-        bodyStyles: { lineWidth: 0.3 },
-      });
+        margin: { left: startXTable, right: startXTable },
+        bodyStyles: { 
+          lineWidth: 0.1,
+          fillColor: [255, 255, 255]
+        },
+        alternateRowStyles: {
+          fillColor: [248, 249, 250]
+        }
+      };
 
-      doc.text(`Prepared by: ${data.preparedBy}`, 100, doc.lastAutoTable.finalY + 40);
+      // Generate the stock items table
+      doc.autoTable(tableOptions);
+
+      // Footer
+      doc.setFontSize(10);
+      doc.text(`Prepared by: ${data.preparedBy}`, 100, doc.lastAutoTable.finalY + 30);
+      doc.text("Generated by Complete Solution Pharmacy System", pageWidth / 2, doc.lastAutoTable.finalY + 50, { align: "center" });
+
       doc.save("Stock_Transfer_Form.pdf");
     }
   </script>
