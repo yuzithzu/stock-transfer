@@ -267,7 +267,7 @@
     }
 
     #stockTable {
-      min-width: 700px;
+      min-width: 900px;
     }
 
     /* Mobile-specific adjustments */
@@ -373,6 +373,18 @@
     .input-scroll-container::-webkit-scrollbar-thumb:hover {
       background: #a8a8a8;
     }
+    
+    /* Highlight quantity requested */
+    .qty-requested {
+      background-color: #fff8e1;
+      border: 1px solid #ffc107;
+    }
+    
+    /* Red color for quantity requested in PDF */
+    .qty-requested-red {
+      color: #e74c3c;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -417,8 +429,10 @@
                   <th>STOCK CODE</th>
                   <th>PRODUCT DESCRIPTION</th>
                   <th>QTY ONHAND</th>
+                  <th>LOCATION</th>
                   <th>QTY REQUESTED</th>
                   <th>UOM</th>
+                  <th>TOTAL</th>
                   <th>REMARKS</th>
                   <th>ACTION</th>
                 </tr>
@@ -459,13 +473,29 @@
       row.innerHTML = `
         <td><input type="text" value="${data.stock_code || ""}" required></td>
         <td><input type="text" value="${data.product_description || ""}" required></td>
-        <td><input type="text" value="${data.qty_onhand || ""}" required></td>
-        <td><input type="text" value="${data.qty_requested || ""}" required></td>
+        <td><input type="text" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
+        <td><input type="text" value="${data.location || ""}" required></td>
+        <td><input type="text" value="${data.qty_requested || ""}" required class="qty-requested"></td>
         <td><input type="text" value="${data.uom || ""}" required></td>
+        <td><input type="text" value="" readonly class="total-cell"></td>
         <td><textarea rows="3">${data.remarks || ""}</textarea></td>
         <td><button type="button" class="remove-btn" onclick="removeRow(this)">Remove</button></td>
       `;
       tbody.appendChild(row);
+      
+      // Add event listeners for calculation
+      const onhandInput = row.querySelector('.qty-onhand');
+      const requestedInput = row.querySelector('.qty-requested');
+      const totalCell = row.querySelector('.total-cell');
+      
+      const calculateTotal = () => {
+        const onhand = parseFloat(onhandInput.value) || 0;
+        const requested = parseFloat(requestedInput.value) || 0;
+        totalCell.value = onhand - requested;
+      };
+      
+      onhandInput.addEventListener('input', calculateTotal);
+      requestedInput.addEventListener('input', calculateTotal);
     }
 
     function removeRow(btn) {
@@ -548,9 +578,11 @@
             stock_code: inputs[0].value,
             product_description: inputs[1].value,
             qty_onhand: inputs[2].value,
-            qty_requested: inputs[3].value,
-            uom: inputs[4].value,
-            remarks: inputs[5].value,
+            location: inputs[3].value,
+            qty_requested: inputs[4].value,
+            uom: inputs[5].value,
+            remarks: inputs[7].value,
+            total: inputs[6].value,
           };
         }),
       };
@@ -595,7 +627,7 @@
     function submitForm() {
       saveData();
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+      const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
 
       // Title
       doc.setFontSize(18);
@@ -665,12 +697,14 @@
         "Stock Code",
         "Product Description",
         "Qty Onhand",
+        "Location",
         "Qty Requested",
         "UOM",
+        "Total",
         "Remarks"
       ];
 
-      // Table data
+      // Table data with proper formatting
       const rows = data.rows.map((r) => {
         const wrappedRemarks = r.remarks
           ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim()
@@ -679,39 +713,37 @@
           r.stock_code,
           r.product_description,
           r.qty_onhand,
+          r.location,
           r.qty_requested,
           r.uom,
+          r.total,
           wrappedRemarks
         ];
       });
 
-      // Calculate table dimensions and center it properly
-      const availableWidth = pageWidth - 100; // Leave margins
-      const tableWidth2 = Math.min(availableWidth, 700); // Max width 700pt
-      const startXTable = (pageWidth - tableWidth2) / 2;
-      const startY2 = doc.lastAutoTable.finalY + 20;
-
-      // Define table options for stock items
+      // Define table options for stock items with proper column widths
       const tableOptions = {
-        startY: startY2,
+        startY: doc.lastAutoTable.finalY + 30,
         head: [headers],
         body: rows,
         theme: "grid",
         styles: {
-          fontSize: 9,
-          cellPadding: { top: 8, right: 8, bottom: 8, left: 8 },
+          fontSize: 8,
+          cellPadding: { top: 4, right: 4, bottom: 4, left: 4 },
           overflow: "linebreak",
           valign: "top",
           lineColor: [180, 180, 180],
           lineWidth: 0.2
         },
         columnStyles: {
-          0: { cellWidth: 70 },
-          1: { cellWidth: 110 },
-          2: { cellWidth: 70, halign: "center" },
-          3: { cellWidth: 70, halign: "center" },
-          4: { cellWidth: 50, halign: "center" },
-          5: { cellWidth: 150 } // Reduced width to prevent overflow
+          0: { cellWidth: 60 },
+          1: { cellWidth: 100 },
+          2: { cellWidth: 60, halign: "center" },
+          3: { cellWidth: 60, halign: "center" },
+          4: { cellWidth: 60, halign: "center" },
+          5: { cellWidth: 40, halign: "center" },
+          6: { cellWidth: 60, halign: "center" },
+          7: { cellWidth: 120 }
         },
         headStyles: {
           fillColor: [43, 61, 82],
@@ -720,14 +752,25 @@
           halign: "center",
           lineWidth: 0.2
         },
-        margin: { left: startXTable, right: startXTable },
+        margin: { left: 30, right: 30 },
         bodyStyles: { 
           lineWidth: 0.1,
           fillColor: [255, 255, 255]
         },
         alternateRowStyles: {
           fillColor: [248, 249, 250]
-        }
+        },
+        didParseCell: function(data) {
+          // Apply special styling to Qty Requested column (column index 4)
+          if (data.column.index === 4) {
+            data.cell.styles.fillColor = [255, 248, 225];
+            data.cell.styles.textColor = [231, 76, 60];
+            data.cell.styles.fontStyle = "bold";
+          }
+        },
+        // Handle multi-page tables
+        pageBreak: 'auto',
+        tableWidth: 'wrap'
       };
 
       // Generate the stock items table
