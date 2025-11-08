@@ -208,6 +208,53 @@
       font-size: 11px;
       margin-top: 3px;
     }
+        /* 🕒 Date-Time Widget Design */
+    .date-time-widget {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-family: "Poppins", sans-serif;
+    }
+    
+    .calendar {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 10px 15px;
+      border-radius: 10px;
+      text-align: center;
+      color: #rgb(0, 0, 0);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    
+    .calendar .day-name {
+      font-size: 13px;
+      letter-spacing: 1px;
+      opacity: 0.9;
+    }
+    
+    .calendar .date-number {
+      font-size: 26px;
+      font-weight: 700;
+      margin: 2px 0;
+    }
+    
+    .calendar .month-year {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+    
+    .clock {
+      background: #ffffff;
+      color: #2c5364;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 1px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
 
     /* Messenger-style layout */
     .messenger-container {
@@ -394,7 +441,14 @@
       <h1>COMPLETE SOLUTION PHARMACY</h1>
       <h2>STOCK TRANSFER REQUEST</h2>
     </div>
-    
+    <div class="date-time-widget">
+  <div class="calendar">
+    <div class="day-name" id="dayName">Friday</div>
+    <div class="date-number" id="dateNumber">08</div>
+    <div class="month-year" id="monthYear">November 2025</div>
+  </div>
+  <div class="clock" id="clock">12:00:00 PM</div>
+  </div>
     <div class="messenger-body">
       <form id="stockForm">
         <div class="form-section">
@@ -773,6 +827,35 @@
 
       doc.save("Stock_Transfer_Form.pdf");
     }
+    
+        // 🕒 Real-time Clock + Calendar
+     function updateDateTime() {
+      const now = new Date();
+    
+      const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      const months = [
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+      ];
+    
+      document.getElementById("dayName").textContent = days[now.getDay()];
+      document.getElementById("dateNumber").textContent = String(now.getDate()).padStart(2, "0");
+      document.getElementById("monthYear").textContent = `${months[now.getMonth()]} ${now.getFullYear()}`;
+    
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+    
+      document.getElementById("clock").textContent = 
+        `${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")} ${ampm}`;
+    }
+    
+    // Update every second
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
   </script>
 </body>
 </html>
