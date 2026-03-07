@@ -843,7 +843,7 @@
       doc.text(`Prepared by: ${data.preparedBy}`, 40, doc.lastAutoTable.finalY + 30);
       doc.text(timestamp, pageWidth - 40, doc.lastAutoTable.finalY + 30, { align: "right" }); // Added the timestamp here
       
-      doc.text("Created by gelocutler", pageWidth / 2, doc.lastAutoTable.finalY + 50, { align: "center" });
+      doc.text("System Created by gelocutler", pageWidth / 2, doc.lastAutoTable.finalY + 50, { align: "center" });
 
       doc.save("Stock_Transfer_Form.pdf");
       alert("✅ PDF successfully generated!");
