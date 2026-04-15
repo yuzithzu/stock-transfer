@@ -17,7 +17,7 @@
       --secondary-color: #2a5298;
       --accent-color: #f39c12;
       --danger-color: #e74c3c;
-      --bg-color: #f4f7f6;
+      --bg-color: #1e293b; /* Parehas na sa intro background */
       --text-color: #333;
       --border-color: #e0e6ed;
     }
@@ -30,83 +30,82 @@
       color: var(--text-color);
       font-size: 14px;
       line-height: 1.5;
+      overflow-x: hidden; /* Iwas scrollbar pag nag slide */
     }
 
-    /* SPLASH SCREEN INTRO */
+    /* SPLASH SCREEN INTRO - SMOOTH SLIDE UP */
     #splash-screen {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #0f172a);
-      background-size: 200% 200%;
+      background-color: #1e293b; 
       z-index: 9999;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: white;
-      transition: opacity 0.8s ease-out, visibility 0.8s;
-      animation: gradientShift 5s ease infinite;
+      color: #f8fafc;
+      transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); /* Smooth slide effect */
+    }
+
+    /* Class na i-a-add ng JavaScript para mag-slide pataas */
+    .slide-up {
+      transform: translateY(-100%);
     }
 
     .splash-title {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 2px;
       margin-bottom: 10px;
-      animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      padding: 0 20px;
+      opacity: 0;
+      animation: smoothFadeIn 1s ease-out 0.2s forwards;
     }
 
     .splash-subtitle {
       font-size: 14px;
-      letter-spacing: 5px;
+      letter-spacing: 3px;
+      color: #94a3b8;
       opacity: 0;
-      animation: slideUp 1s ease-out 0.5s forwards;
-      color: #cbd5e0;
+      animation: smoothFadeIn 1s ease-out 0.6s forwards;
     }
 
     .splash-creator {
       margin-top: 40px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #38bdf8;
+      font-size: 14px;
+      color: #64748b;
       opacity: 0;
-      animation: neonPulse 1.5s infinite alternate, slideUp 1s ease-out 1s forwards;
+      animation: smoothFadeIn 1s ease-out 1s forwards;
     }
 
     .loader-ring {
       margin-top: 30px;
-      width: 40px; height: 40px;
-      border: 4px solid rgba(255,255,255,0.1);
+      width: 35px; height: 35px;
+      border: 3px solid rgba(255, 255, 255, 0.05);
       border-top-color: #38bdf8;
       border-radius: 50%;
       opacity: 0;
-      animation: spin 1s linear infinite, fade-in 0.5s ease-out 1.2s forwards;
+      animation: spin 1s linear infinite, smoothFadeIn 0.5s ease-out 1.2s forwards;
     }
 
-    @keyframes gradientShift { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
-    @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    @keyframes slideUp { 0% { transform: translateY(20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    @keyframes smoothFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @keyframes spin { 100% { transform: rotate(360deg); } }
-    @keyframes fade-in { 100% { opacity: 1; } }
 
     /* MESSENGER APP LAYOUT */
     .messenger-container {
-      display: none; /* Hidden strictly while splash is active */
+      display: flex; 
       flex-direction: column;
       max-width: 900px;
       margin: 0 auto;
       background: #fff;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      animation: fadeInApp 1s ease-in;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
-
-    @keyframes fadeInApp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     .messenger-header {
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -121,12 +120,6 @@
 
     .animated-title {
       font-weight: 400; font-size: 14px; margin: 8px 0 0; letter-spacing: 3px; color: #ffd700;
-      animation: neonTitlePulse 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes neonTitlePulse {
-      0% { opacity: 0.5; transform: translateX(-5px); text-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
-      100% { opacity: 1; transform: translateX(5px); text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
     }
 
     /* 🕒 Date-Time Widget */
@@ -183,7 +176,7 @@
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px dashed var(--border-color);
-      animation: fadeInApp 0.3s ease-out;
+      animation: smoothFadeIn 0.3s ease-out forwards;
     }
 
     .input-scroll-container { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color); }
@@ -202,7 +195,6 @@
       -webkit-appearance: none; -moz-appearance: none; appearance: none;
     }
     
-    /* Make td select look good and have a custom dropdown arrow */
     td select {
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234a5568%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
       background-repeat: no-repeat, repeat;
@@ -256,12 +248,7 @@
 
     /* ANIMATED FOOTER */
     .messenger-footer { background-color: #0f172a; padding: 15px; text-align: center; font-size: 13px; font-weight: 600; color: #94a3b8; }
-    .creator-text { color: #38bdf8; animation: neonPulse 2s infinite alternate; }
-
-    @keyframes neonPulse {
-      0% { text-shadow: 0 0 5px rgba(56, 189, 248, 0.2); }
-      100% { text-shadow: 0 0 15px rgba(56, 189, 248, 0.8), 0 0 20px rgba(56, 189, 248, 0.6); color: #7dd3fc; }
-    }
+    .creator-text { color: #38bdf8; }
 
     ::-webkit-scrollbar { height: 8px; width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -277,6 +264,7 @@
     }
 
     @media print {
+      body { background-color: #fff; }
       button, .action-buttons, .history-section, #splash-screen { display: none !important; }
       .messenger-container { box-shadow: none; max-width: 100%; display: flex !important; }
       .date-time-container { border: none; }
@@ -367,7 +355,8 @@
                 <col style="width: 10%;">
                 <col style="width: 12%;">
                 <col style="width: 10%;">
-                <col style="width: 10%;"> <col style="width: 8%;">
+                <col style="width: 10%;"> 
+                <col style="width: 8%;">
                 <col style="width: 10%;">
                 <col style="width: 6%;">
               </colgroup>
@@ -432,22 +421,21 @@
   </div>
 
   <script>
-    // SPLASH SCREEN LOGIC
+    // SPLASH SCREEN LOGIC - SMOOTH SLIDE EFFECT
     window.addEventListener('load', () => {
       const splash = document.getElementById('splash-screen');
-      const mainApp = document.getElementById('main-app');
       
+      // Maghihintay ng 2.5 seconds bago mag-slide
       setTimeout(() => {
-        splash.style.opacity = '0';
-        splash.style.visibility = 'hidden';
+        splash.classList.add('slide-up'); // I-a-activate ang transform translateY(-100%)
         
+        // Pagkatapos ng 1 second (duration ng slide), i-h-hide na completely at i-lo-load ang data
         setTimeout(() => {
           splash.style.display = 'none';
-          mainApp.style.display = 'flex';
           loadDraft();
           loadHistory();
-        }, 800); // Wait for transition to finish
-      }, 3500); // 3.5 seconds splash screen duration
+        }, 1000); 
+      }, 2500); 
     });
 
     // DYNAMIC TRANSFER INPUTS TOGGLE
@@ -516,7 +504,6 @@
       onhandInput.addEventListener('input', calculateTotal);
       requestedInput.addEventListener('input', calculateTotal);
       
-      // Auto-save triggers
       row.querySelectorAll('input, select, textarea').forEach(el => {
         el.addEventListener('input', autoSaveDraft);
         el.addEventListener('change', autoSaveDraft);
@@ -596,7 +583,7 @@
             qty_onhand: tr.querySelector('td:nth-child(3) input').value,
             location: tr.querySelector('td:nth-child(4) input').value,
             qty_requested: tr.querySelector('td:nth-child(5) input').value,
-            uom: tr.querySelector('td:nth-child(6) select').value, // NOW GRABBING FROM SELECT
+            uom: tr.querySelector('td:nth-child(6) select').value,
             total: tr.querySelector('td:nth-child(7) input').value,
             remarks: tr.querySelector('td:nth-child(8) textarea').value,
           };
@@ -625,7 +612,7 @@
         
         document.getElementById("courierSelect").value = data.transferCourier || "LBC";
         document.getElementById("othersInput").value = data.transferOthers || "";
-        toggleTransferInputs(); // Re-trigger UI state
+        toggleTransferInputs();
       }
 
       const tbody = document.querySelector("#stockTable tbody");
@@ -644,7 +631,7 @@
       
       const radios = document.querySelectorAll('input[name="transfer"]');
       radios.forEach(r => r.checked = false);
-      toggleTransferInputs(); // Hide sub-menus
+      toggleTransferInputs();
       
       document.querySelector("#stockTable tbody").innerHTML = "";
       addRow();
@@ -658,11 +645,11 @@
       const newEntry = {
         timestamp: new Date().toLocaleString(),
         route: `${data.fromLocation.toUpperCase()} ➔ ${data.branch.toUpperCase()}`,
-        transfer: data.transferFinal, // Use the finalized string
+        transfer: data.transferFinal,
         itemCount: data.rows.length
       };
       
-      history.unshift(newEntry); // Add to top
+      history.unshift(newEntry);
       localStorage.setItem('stockHistory', JSON.stringify(history));
       loadHistory();
     }
@@ -728,7 +715,7 @@
         ["From Location", data.fromLocation],
         ["To Branch", data.branch],
         ["Date of Request", data.date],
-        ["Mode of Transfer", data.transferFinal] // Displays Courier - LBC or Others - [Text]
+        ["Mode of Transfer", data.transferFinal]
       ];
       
       const tableWidth = 400;
