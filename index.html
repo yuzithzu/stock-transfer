@@ -59,7 +59,6 @@
       margin: 0;
     }
 
-    /* ANIMATED TITLE */
     .animated-title {
       font-weight: 400;
       font-size: 14px;
@@ -74,7 +73,11 @@
       100% { opacity: 1; transform: translateX(10px); text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
     }
 
-    /* 🕒 Date-Time Widget Design */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .date-time-container {
       display: flex;
       justify-content: center;
@@ -142,37 +145,24 @@
     input[type="text"], input[type="date"], textarea {
       width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0;
       border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box;
+      font-family: "Inter", sans-serif;
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       border-color: var(--secondary-color); background: #f0f4f8; outline: none;
     }
 
-    /* RADIO BUTTONS STYLE */
-    .transfer-options {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;
-    }
-
+    .transfer-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
     .transfer-options label {
       flex: 1; min-width: 100px; font-size: 13px; padding: 10px;
       background: #f8fafc; border-radius: 6px; border: 1px solid #cbd5e0;
       cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
     }
-
     .transfer-options label:hover { background: #e2e8f0; }
+    .transfer-options input[type="radio"]:checked + span { font-weight: bold; color: var(--primary-color); }
+    .transfer-options input[type="radio"] { margin-right: 8px; cursor: pointer; accent-color: var(--primary-color); }
 
-    /* Highlight selected radio button */
-    .transfer-options input[type="radio"]:checked + span {
-      font-weight: bold; color: var(--primary-color);
-    }
-    
-    .transfer-options input[type="radio"] {
-      margin-right: 8px; cursor: pointer; accent-color: var(--primary-color);
-    }
-
-    .input-scroll-container {
-      overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color);
-    }
+    .input-scroll-container { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color); }
 
     table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 12px; }
     th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 0; vertical-align: middle; }
@@ -181,12 +171,13 @@
     tr:last-child td { border-bottom: none; }
     tr:nth-child(even) { background-color: #f8fafc; }
 
-    td input, td textarea {
+    td input, td textarea, td select {
       width: 100%; height: 100%; border: 2px solid transparent; background: transparent;
-      resize: vertical; font-size: 12px; padding: 10px 8px; box-sizing: border-box; border-radius: 0;
+      font-size: 12px; padding: 10px 8px; box-sizing: border-box; border-radius: 0; font-family: "Inter", sans-serif;
     }
+    td select { appearance: none; cursor: pointer; color: #333; }
 
-    td input:focus, td textarea:focus {
+    td input:focus, td textarea:focus, td select:focus {
       background: #fff; border: 2px solid var(--secondary-color); border-radius: 4px; position: relative; z-index: 1;
     }
 
@@ -213,29 +204,16 @@
 
     .validation-error { color: var(--danger-color); font-size: 11px; margin-top: 4px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
 
-    /* HISTORY SECTION */
-    .history-section {
-      margin-top: 30px;
-      border-top: 2px dashed var(--border-color);
-      padding-top: 20px;
-    }
-    
-    .history-header {
-      font-size: 16px; font-weight: 700; color: var(--primary-color); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-    }
-
+    .history-section { margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 20px; }
+    .history-header { font-size: 16px; font-weight: 700; color: var(--primary-color); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
     .history-table { min-width: 100%; border: 1px solid var(--border-color); }
     .history-table th { background: #e2e8f0; font-size: 12px; }
     .history-table td { padding: 10px; text-align: center; font-size: 12px; }
     .empty-history { text-align: center; color: #94a3b8; font-style: italic; padding: 20px; }
 
     .route-text {
-      color: var(--primary-color);
-      background: #f1f5f9;
-      padding: 4px 10px;
-      border-radius: 4px;
-      display: inline-block;
-      border: 1px solid #cbd5e0;
+      color: var(--primary-color); background: #f1f5f9; padding: 4px 10px;
+      border-radius: 4px; display: inline-block; border: 1px solid #cbd5e0;
     }
 
     .btn-delete-history {
@@ -244,14 +222,8 @@
     }
     .btn-delete-history:hover { background: var(--danger-color); color: white; }
 
-    /* ANIMATED FOOTER */
-    .messenger-footer {
-      background-color: #0f172a; padding: 15px; text-align: center; font-size: 13px; font-weight: 600; color: #94a3b8;
-    }
-    .creator-text {
-      color: #38bdf8;
-      animation: neonPulse 2s infinite alternate;
-    }
+    .messenger-footer { background-color: #0f172a; padding: 15px; text-align: center; font-size: 13px; font-weight: 600; color: #94a3b8; }
+    .creator-text { color: #38bdf8; animation: neonPulse 2s infinite alternate; }
 
     @keyframes neonPulse {
       0% { text-shadow: 0 0 5px rgba(56, 189, 248, 0.2); }
@@ -268,7 +240,7 @@
       .date-time-container { flex-direction: column; align-items: center; }
       .action-buttons { flex-direction: column; }
       button { width: 100%; justify-content: center; }
-      .history-table { min-width: 600px; } /* Allows scroll on mobile */
+      .history-table { min-width: 600px; }
     }
 
     @media print {
@@ -324,11 +296,27 @@
         <div class="form-section">
           <label><i class="fas fa-truck-loading"></i> Mode of Transfer (Select One):</label>
           <div class="transfer-options">
-            <label><input type="radio" name="transfer" value="Courier" /> <span><i class="fas fa-box"></i> Courier</span></label>
-            <label><input type="radio" name="transfer" value="Bus" /> <span><i class="fas fa-bus"></i> Bus</span></label>
-            <label><input type="radio" name="transfer" value="Air" /> <span><i class="fas fa-plane"></i> Air</span></label>
-            <label><input type="radio" name="transfer" value="Others" /> <span><i class="fas fa-ellipsis-h"></i> Others</span></label>
+            <label><input type="radio" name="transfer" value="Courier" onchange="toggleTransferDetails()" /> <span><i class="fas fa-box"></i> Courier</span></label>
+            <label><input type="radio" name="transfer" value="Bus" onchange="toggleTransferDetails()" /> <span><i class="fas fa-bus"></i> Bus</span></label>
+            <label><input type="radio" name="transfer" value="Air" onchange="toggleTransferDetails()" /> <span><i class="fas fa-plane"></i> Air</span></label>
+            <label><input type="radio" name="transfer" value="Others" onchange="toggleTransferDetails()" /> <span><i class="fas fa-ellipsis-h"></i> Others</span></label>
           </div>
+          
+          <div id="courierDetails" style="display: none; margin-top: 15px; animation: fadeIn 0.3s;">
+            <label for="courierSelect" style="font-size: 12px; color: var(--primary-color);">Select Courier Provider:</label>
+            <select id="courierSelect" style="width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 14px; font-family: 'Inter', sans-serif;" onchange="autoSaveDraft()">
+              <option value="LBC">LBC</option>
+              <option value="DHL">DHL</option>
+              <option value="BUS">BUS</option>
+              <option value="LALAMOVE">LALAMOVE</option>
+            </select>
+          </div>
+
+          <div id="otherDetails" style="display: none; margin-top: 15px; animation: fadeIn 0.3s;">
+            <label for="otherTransfer" style="font-size: 12px; color: var(--primary-color);">Please Specify Mode of Transfer:</label>
+            <input type="text" id="otherTransfer" placeholder="Type your preferred transfer method..." oninput="autoSaveDraft()" />
+          </div>
+
           <div id="transferError" class="validation-error"></div>
         </div>
 
@@ -341,10 +329,9 @@
                 <col style="width: 10%;">
                 <col style="width: 12%;">
                 <col style="width: 10%;">
-                <col style="width: 8%;">
-                <col style="width: 8%;">
+                <col style="width: 10%;"> <col style="width: 8%;">
                 <col style="width: 12%;">
-                <col style="width: 6%;">
+                <col style="width: 4%;">
               </colgroup>
               <thead>
                 <tr>
@@ -412,17 +399,37 @@
       loadHistory();
     });
 
+    // DYNAMIC TRANSFER UI LOGIC
+    function toggleTransferDetails() {
+      const val = document.querySelector('input[name="transfer"]:checked')?.value;
+      document.getElementById('courierDetails').style.display = (val === 'Courier') ? 'block' : 'none';
+      document.getElementById('otherDetails').style.display = (val === 'Others') ? 'block' : 'none';
+      autoSaveDraft();
+    }
+
     // TABLE ROW LOGIC
     function addRow(data = {}) {
       const tbody = document.querySelector("#stockTable tbody");
       const row = document.createElement("tr");
+      
+      // Updated UOM with Dropdown
       row.innerHTML = `
         <td><input type="text" placeholder="Code" value="${data.stock_code || ""}" required></td>
         <td><input type="text" placeholder="Description" value="${data.product_description || ""}" required></td>
         <td><input type="number" placeholder="0" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
         <td><input type="text" placeholder="Bin/Loc" value="${data.location || ""}" required></td>
         <td><input type="number" placeholder="0" value="${data.qty_requested || ""}" required class="qty-requested"></td>
-        <td><input type="text" placeholder="Pc/Bx" value="${data.uom || ""}" required></td>
+        <td>
+          <select required>
+            <option value="" disabled ${!data.uom ? "selected" : ""}>Select</option>
+            <option value="TABS" ${data.uom === "TABS" ? "selected" : ""}>TABS</option>
+            <option value="CAPS" ${data.uom === "CAPS" ? "selected" : ""}>CAPS</option>
+            <option value="BOXS" ${data.uom === "BOXS" ? "selected" : ""}>BOXS</option>
+            <option value="PFS" ${data.uom === "PFS" ? "selected" : ""}>PFS</option>
+            <option value="VIALS" ${data.uom === "VIALS" ? "selected" : ""}>VIALS</option>
+            <option value="AMPS" ${data.uom === "AMPS" ? "selected" : ""}>AMPS</option>
+          </select>
+        </td>
         <td><input type="number" placeholder="0" value="${data.total || ""}" readonly class="total-cell"></td>
         <td><textarea rows="1" placeholder="Notes...">${data.remarks || ""}</textarea></td>
         <td style="text-align: center; padding: 4px;">
@@ -469,9 +476,15 @@
       if (!document.getElementById("branch").value.trim()) { errors.branch.innerHTML = '<i class="fas fa-exclamation-circle"></i> To Branch is required'; isValid = false; }
       if (!document.getElementById("date").value) { errors.date.innerHTML = '<i class="fas fa-exclamation-circle"></i> Date is required'; isValid = false; }
       
-      if (!document.querySelector('input[name="transfer"]:checked')) { 
+      const transferRadio = document.querySelector('input[name="transfer"]:checked');
+      if (!transferRadio) { 
         errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select one mode of transfer'; 
         isValid = false; 
+      } else {
+        if (transferRadio.value === 'Others' && !document.getElementById("otherTransfer").value.trim()) {
+           errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please specify the mode of transfer'; 
+           isValid = false;
+        }
       }
 
       if (!document.getElementById("preparedBy").value.trim()) { errors.preparedBy.innerHTML = '<i class="fas fa-exclamation-circle"></i> Prepared by is required'; isValid = false; }
@@ -482,7 +495,8 @@
         isValid = false;
       } else {
         rows.forEach((row) => {
-          const inputs = row.querySelectorAll("input[required]");
+          // Check inputs and select dropdowns
+          const inputs = row.querySelectorAll("input[required], select[required]");
           inputs.forEach(input => {
             if (!input.value.trim()) {
               isValid = false;
@@ -505,20 +519,28 @@
         date: document.getElementById("date").value,
         preparedBy: document.getElementById("preparedBy").value,
         transfer: selectedTransfer ? selectedTransfer.value : "",
+        courierDetail: document.getElementById("courierSelect").value,
+        otherDetail: document.getElementById("otherTransfer").value,
         rows: Array.from(document.querySelectorAll("#stockTable tbody tr")).map((tr) => {
-          const inputs = tr.querySelectorAll("input, textarea");
+          const inputs = tr.querySelectorAll("input, select, textarea");
           return {
             stock_code: inputs[0].value,
             product_description: inputs[1].value,
             qty_onhand: inputs[2].value,
             location: inputs[3].value,
             qty_requested: inputs[4].value,
-            uom: inputs[5].value,
+            uom: inputs[5].value, // This is now the <select> value
             total: inputs[6].value,
             remarks: inputs[7].value,
           };
         }),
       };
+    }
+
+    function getFormattedTransfer(data) {
+      if (data.transfer === 'Courier') return `Courier (${data.courierDetail})`;
+      if (data.transfer === 'Others') return data.otherDetail ? data.otherDetail.toUpperCase() : 'OTHERS';
+      return data.transfer;
     }
 
     // AUTO-SAVE DRAFT 
@@ -538,8 +560,13 @@
       
       if(data.transfer) {
         const radio = document.querySelector(`input[name="transfer"][value="${data.transfer}"]`);
-        if(radio) radio.checked = true;
+        if(radio) {
+           radio.checked = true;
+           toggleTransferDetails();
+        }
       }
+      if(data.courierDetail) document.getElementById("courierSelect").value = data.courierDetail;
+      if(data.otherDetail) document.getElementById("otherTransfer").value = data.otherDetail;
 
       const tbody = document.querySelector("#stockTable tbody");
       tbody.innerHTML = "";
@@ -553,8 +580,11 @@
       document.getElementById("fromLocation").value = "";
       document.getElementById("branch").value = "";
       document.getElementById("preparedBy").value = "";
+      document.getElementById("otherTransfer").value = "";
+      
       const radios = document.querySelectorAll('input[name="transfer"]');
       radios.forEach(r => r.checked = false);
+      toggleTransferDetails();
       
       document.querySelector("#stockTable tbody").innerHTML = "";
       addRow();
@@ -568,7 +598,7 @@
       const newEntry = {
         timestamp: new Date().toLocaleString(),
         route: `${data.fromLocation.toUpperCase()} ➔ ${data.branch.toUpperCase()}`,
-        transfer: data.transfer,
+        transfer: getFormattedTransfer(data),
         itemCount: data.rows.length
       };
       
@@ -638,7 +668,7 @@
         ["From Location", data.fromLocation],
         ["To Branch", data.branch],
         ["Date of Request", data.date],
-        ["Mode of Transfer", data.transfer]
+        ["Mode of Transfer", getFormattedTransfer(data)]
       ];
       
       const tableWidth = 400;
