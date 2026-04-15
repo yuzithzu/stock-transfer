@@ -4,436 +4,278 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>COMPLETESOLUTION PHARMACY - Stock Transfer</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
   <style>
+    :root {
+      --primary-color: #1e3c72;
+      --secondary-color: #2a5298;
+      --accent-color: #f39c12;
+      --danger-color: #e74c3c;
+      --bg-color: #f4f7f6;
+      --text-color: #333;
+      --border-color: #e0e6ed;
+    }
+
     body {
-      font-family: "Poppins", Arial, sans-serif;
+      font-family: "Inter", Arial, sans-serif;
       margin: 0;
-      padding: 10px;
-      background-color: #f6f7fb;
-      color: #333;
+      padding: 20px 10px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-size: 14px;
       line-height: 1.5;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 15px;
-      background: linear-gradient(135deg, #203a43, #2c5364);
-      padding: 15px;
-      border-radius: 10px;
-      color: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .messenger-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     }
 
-    .header h1 {
-      font-size: 18px;
+    .messenger-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .messenger-header h1 {
+      font-size: 20px;
+      font-weight: 700;
       letter-spacing: 1px;
       margin: 0;
     }
 
-    .header h2 {
+    /* ANIMATED TITLE */
+    .animated-title {
       font-weight: 400;
-      font-size: 12px;
-      margin: 4px 0 0;
-      letter-spacing: 1px;
-    }
-
-    form {
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      margin-bottom: 15px;
-    }
-
-    .form-section {
-      margin-bottom: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #e9ecef;
-    }
-
-    .form-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    label {
-      font-weight: 600;
-      color: #2c3e50;
-      display: block;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
       font-size: 14px;
-      transition: 0.2s;
-      box-sizing: border-box;
-      margin-bottom: 5px;
+      margin: 8px 0 0;
+      letter-spacing: 3px;
+      color: #ffd700;
+      animation: slideFade 3s ease-in-out infinite alternate;
     }
 
-    input:focus,
-    textarea:focus {
-      border-color: #2c5364;
-      background: #f0f9ff;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(44, 83, 100, 0.2);
-    }
-
-    .transfer-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 5px;
-    }
-
-    .transfer-options label {
-      flex: 1 1 calc(50% - 8px);
-      font-size: 12px;
-      padding: 8px;
-      background: #f8f9fa;
-      border-radius: 5px;
-      border: 1px solid #e9ecef;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
-
-    .transfer-options input {
-      margin-right: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0 auto 15px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      font-size: 11px;
-      table-layout: fixed;
-    }
-
-    th,
-    td {
-      border: 1px solid #dee2e6;
-      padding: 6px 8px;
-      font-size: 11px;
-      vertical-align: middle;
-      word-wrap: break-word;
-      word-break: break-word;
-    }
-
-    th {
-      background-color: #2b3d52;
-      color: white;
-      text-transform: uppercase;
-      font-size: 10px;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    tr:nth-child(even) {
-      background-color: #f8f9fa;
-    }
-
-    tr:nth-child(odd) {
-      background-color: #ffffff;
-    }
-
-    td input,
-    td textarea {
-      width: 100%;
-      border: 1px solid transparent;
-      background: transparent;
-      resize: vertical;
-      font-size: 11px;
-      padding: 4px;
-      box-sizing: border-box; /* Ensures padding doesn't break table cell */
-      border-radius: 3px;
-    }
-
-    td input:focus,
-    td textarea:focus {
-      background: #fffce6;
-      border: 1px solid #ccc;
-      outline: none;
-    }
-
-    .action-buttons {
-      margin-top: 15px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    button {
-      background-color: #2b3d52;
-      color: white;
-      border: none;
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      flex: 1;
-      min-width: 110px;
-      font-weight: 500;
-    }
-
-    button:hover {
-      background-color: #1f2c3d;
-      transform: translateY(-1px);
-    }
-
-    .footer {
-      margin-top: 15px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .footer div {
-      width: 100%;
-    }
-
-    .validation-error {
-      color: #e74c3c;
-      font-size: 11px;
-      margin-top: 3px;
+    @keyframes slideFade {
+      0% { opacity: 0.5; transform: translateX(-10px); }
+      100% { opacity: 1; transform: translateX(10px); text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
     }
 
     /* 🕒 Date-Time Widget Design */
-    .date-time-widget {
-      margin-top: 10px;
+    .date-time-container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      font-family: "Poppins", sans-serif;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      background-color: #f8fafc;
+      border-bottom: 1px solid var(--border-color);
     }
-    
+
     .calendar {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 10px 15px;
-      border-radius: 10px;
+      background: linear-gradient(135deg, #2b5876, #4e4376);
+      padding: 10px 20px;
+      border-radius: 8px;
       text-align: center;
-      color: #rgb(0, 0, 0);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      min-width: 120px;
     }
     
-    .calendar .day-name {
-      font-size: 13px;
-      letter-spacing: 1px;
-      opacity: 0.9;
-    }
+    .calendar .day-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+    .calendar .date-number { font-size: 28px; font-weight: 700; margin: -2px 0; }
+    .calendar .month-year { font-size: 11px; opacity: 0.85; }
     
-    .calendar .date-number {
-      font-size: 26px;
-      font-weight: 700;
-      margin: 2px 0;
-    }
-    
-    .calendar .month-year {
-      font-size: 12px;
-      opacity: 0.85;
-    }
-    
+    .clock-wrapper { display: flex; align-items: center; }
+
     .clock {
       background: #ffffff;
-      color: #2c5364;
-      padding: 6px 12px;
+      color: var(--primary-color);
+      padding: 12px 20px;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 700;
+      font-size: 18px;
       letter-spacing: 1px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Messenger-style layout */
-    .messenger-container {
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
       display: flex;
-      flex-direction: column;
-      max-width: 600px;
-      margin: 0 auto;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .messenger-body { padding: 20px; }
+
+    .form-section {
       background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .messenger-header {
-      background-color: #0060FF;
-      color: white;
       padding: 15px;
-      text-align: center;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
-    .messenger-body {
-      padding: 15px;
+    .form-row { display: flex; gap: 15px; flex-wrap: wrap; }
+    .form-group { flex: 1; min-width: 200px; }
+
+    label {
+      font-weight: 600;
+      color: #4a5568;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 13px;
     }
 
-    .messenger-footer {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-top: 1px solid #e9ecef;
+    input[type="text"], input[type="date"], textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0;
+      border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box;
     }
 
-    /* Improved remove button */
+    input:focus, textarea:focus {
+      border-color: var(--secondary-color); background: #f0f4f8; outline: none;
+    }
+
+    /* RADIO BUTTONS STYLE */
+    .transfer-options {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;
+    }
+
+    .transfer-options label {
+      flex: 1; min-width: 100px; font-size: 13px; padding: 10px;
+      background: #f8fafc; border-radius: 6px; border: 1px solid #cbd5e0;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+    }
+
+    .transfer-options label:hover { background: #e2e8f0; }
+
+    /* Highlight selected radio button */
+    .transfer-options input[type="radio"]:checked + span {
+      font-weight: bold; color: var(--primary-color);
+    }
+    
+    .transfer-options input[type="radio"] {
+      margin-right: 8px; cursor: pointer; accent-color: var(--primary-color);
+    }
+
+    .input-scroll-container {
+      overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color);
+    }
+
+    table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 12px; }
+    th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 0; vertical-align: middle; }
+    th { background-color: #f1f5f9; color: #475569; text-transform: uppercase; font-size: 11px; font-weight: 700; text-align: center; padding: 12px 8px; }
+    td:last-child, th:last-child { border-right: none; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) { background-color: #f8fafc; }
+
+    td input, td textarea {
+      width: 100%; height: 100%; border: 2px solid transparent; background: transparent;
+      resize: vertical; font-size: 12px; padding: 10px 8px; box-sizing: border-box; border-radius: 0;
+    }
+
+    td input:focus, td textarea:focus {
+      background: #fff; border: 2px solid var(--secondary-color); border-radius: 4px; position: relative; z-index: 1;
+    }
+
+    .qty-requested { background-color: #fffbeb !important; font-weight: 600; color: #b45309; }
+    .total-cell { background-color: #f1f5f9 !important; font-weight: 600; color: #334155; text-align: center; }
+
+    .action-buttons { margin-top: 20px; display: flex; gap: 12px; justify-content: center; }
+    
+    button {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;
+    }
+
+    button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+    .btn-add { background: linear-gradient(to right, #10b981, #059669); }
+    .btn-add:hover { background: linear-gradient(to right, #059669, #047857); }
+
     .remove-btn {
-      background-color: #e74c3c;
-      color: white;
-      border: none;
-      padding: 6px;
+      background: var(--danger-color); color: white; border: none; padding: 8px; border-radius: 4px;
+      cursor: pointer; width: 32px; height: 32px; margin: 0 auto; display: flex; align-items: center; justify-content: center;
+    }
+    .remove-btn:hover { background-color: #c0392b; transform: scale(1.05); }
+
+    .validation-error { color: var(--danger-color); font-size: 11px; margin-top: 4px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+
+    /* HISTORY SECTION */
+    .history-section {
+      margin-top: 30px;
+      border-top: 2px dashed var(--border-color);
+      padding-top: 20px;
+    }
+    
+    .history-header {
+      font-size: 16px; font-weight: 700; color: var(--primary-color); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    }
+
+    .history-table { min-width: 100%; border: 1px solid var(--border-color); }
+    .history-table th { background: #e2e8f0; font-size: 12px; }
+    .history-table td { padding: 10px; text-align: center; font-size: 12px; }
+    .empty-history { text-align: center; color: #94a3b8; font-style: italic; padding: 20px; }
+
+    .route-text {
+      color: var(--primary-color);
+      background: #f1f5f9;
+      padding: 4px 10px;
       border-radius: 4px;
-      font-size: 11px;
-      cursor: pointer;
-      transition: 0.2s;
-      display: block;
-      width: 100%;
-      text-align: center;
-      box-sizing: border-box;
-      min-width: 0; /* 👈 ITO YUNG FIX: Para hindi niya sundin yung 110px na min-width */
-      white-space: nowrap; /* 👈 Para hindi bumaba sa second line yung text */
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      display: inline-block;
+      border: 1px solid #cbd5e0;
     }
 
-    .remove-btn:hover {
-      background-color: #c0392b;
+    .btn-delete-history {
+      background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color);
+      padding: 4px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; transition: 0.2s; margin: 0 auto;
     }
-    /* Scrollable table */
-    .messenger-body {
-      overflow-x: auto;
-      padding: 15px;
+    .btn-delete-history:hover { background: var(--danger-color); color: white; }
+
+    /* ANIMATED FOOTER */
+    .messenger-footer {
+      background-color: #0f172a; padding: 15px; text-align: center; font-size: 13px; font-weight: 600; color: #94a3b8;
+    }
+    .creator-text {
+      color: #38bdf8;
+      animation: neonPulse 2s infinite alternate;
     }
 
-    #stockTable {
-      min-width: 900px; /* Gives enough room for columns */
+    @keyframes neonPulse {
+      0% { text-shadow: 0 0 5px rgba(56, 189, 248, 0.2); }
+      100% { text-shadow: 0 0 15px rgba(56, 189, 248, 0.8), 0 0 20px rgba(56, 189, 248, 0.6); color: #7dd3fc; }
     }
 
-    /* Mobile-specific adjustments */
+    ::-webkit-scrollbar { height: 8px; width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+
     @media (max-width: 768px) {
-      body {
-        margin: 8px;
-        font-size: 13px;
-      }
-      
-      .header {
-        padding: 10px;
-      }
-      
-      .header h1 {
-        font-size: 16px;
-      }
-      
-      .header h2 {
-        font-size: 11px;
-      }
-      
-      form {
-        padding: 12px;
-      }
-      
-      .form-section {
-        margin-bottom: 12px;
-        padding-bottom: 12px;
-      }
-      
-      .transfer-options {
-        flex-direction: column;
-      }
-      
-      .transfer-options label {
-        flex: 1 1 100%;
-        padding: 8px;
-        font-size: 12px;
-      }
-      
-      table {
-        font-size: 10px;
-        margin: 0 auto 10px;
-      }
-      
-      th,
-      td {
-        padding: 5px 6px;
-      }
-      
-      button {
-        padding: 10px 12px;
-        font-size: 13px;
-        min-width: 100px;
-      }
-      
-      input[type="text"],
-      input[type="date"],
-      textarea {
-        padding: 10px 12px;
-        font-size: 14px;
-        margin-bottom: 8px;
-      }
-      
-      .action-buttons {
-        gap: 40px;
-      }
-      
-      .messenger-container {
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
-      }
+      .messenger-container { border-radius: 0; box-shadow: none; }
+      .form-row { flex-direction: column; gap: 10px; }
+      .date-time-container { flex-direction: column; align-items: center; }
+      .action-buttons { flex-direction: column; }
+      button { width: 100%; justify-content: center; }
+      .history-table { min-width: 600px; } /* Allows scroll on mobile */
     }
 
     @media print {
-      button,
-      .action-buttons {
-        display: none;
-      }
-    }
-    
-    /* Scrollable container for inputs */
-    .input-scroll-container {
-      overflow-x: auto;
-      padding: 5px 0;
-    }
-    
-    .input-scroll-container::-webkit-scrollbar {
-      height: 6px;
-    }
-    
-    .input-scroll-container::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 10px;
-    }
-    
-    .input-scroll-container::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 10px;
-    }
-    
-    .input-scroll-container::-webkit-scrollbar-thumb:hover {
-      background: #a8a8a8;
-    }
-    
-    /* Highlight quantity requested */
-    .qty-requested {
-      background-color: #fff8e1 !important;
-      border: 1px solid #ffc107 !important;
-    }
-    
-    /* Red color for quantity requested in PDF */
-    .qty-requested-red {
-      color: #e74c3c;
-      font-weight: bold;
+      button, .action-buttons, .history-section { display: none; }
+      .messenger-container { box-shadow: none; max-width: 100%; }
+      .date-time-container { border: none; }
+      .animated-title { animation: none; color: #666; text-shadow: none; }
     }
   </style>
 </head>
@@ -442,67 +284,79 @@
   <div class="messenger-container">
     <div class="messenger-header">
       <h1>COMPLETESOLUTION PHARMACY</h1>
-      <h2>STOCK TRANSFER REQUEST</h2>
+      <h2 class="animated-title"><i class="fas fa-exchange-alt"></i> STOCK TRANSFER REQUEST</h2>
     </div>
-    <div class="date-time-widget">
-  <div class="calendar">
-    <div class="day-name" id="dayName">Friday</div>
-    <div class="date-number" id="dateNumber">08</div>
-    <div class="month-year" id="monthYear">November 2025</div>
-  </div>
-  <div class="clock" id="clock">12:00:00 PM</div>
-  </div>
+    
+    <div class="date-time-container">
+      <div class="calendar">
+        <div class="day-name" id="dayName">Friday</div>
+        <div class="date-number" id="dateNumber">08</div>
+        <div class="month-year" id="monthYear">November 2025</div>
+      </div>
+      <div class="clock-wrapper">
+        <div class="clock" id="clock"><i class="far fa-clock"></i> 12:00:00 PM</div>
+      </div>
+    </div>
+
     <div class="messenger-body">
       <form id="stockForm">
+        
         <div class="form-section">
-          <div>
-            <label for="branch">🏢 Branch:</label>
-            <input type="text" id="branch" placeholder="Enter branch name" required />
-            <div id="branchError" class="validation-error"></div>
-          </div>
-          <div>
-            <label for="date">📅 Date of Request:</label>
-            <input type="date" id="date" required />
-            <div id="dateError" class="validation-error"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fromLocation"><i class="fas fa-map-marker-alt"></i> From Location:</label>
+              <input type="text" id="fromLocation" placeholder="Enter source location" required />
+              <div id="fromLocationError" class="validation-error"></div>
+            </div>
+            <div class="form-group">
+              <label for="branch"><i class="fas fa-store"></i> To Branch:</label>
+              <input type="text" id="branch" placeholder="Enter destination branch" required />
+              <div id="branchError" class="validation-error"></div>
+            </div>
+            <div class="form-group">
+              <label for="date"><i class="fas fa-calendar-alt"></i> Date of Request:</label>
+              <input type="date" id="date" required />
+              <div id="dateError" class="validation-error"></div>
+            </div>
           </div>
         </div>
 
         <div class="form-section">
-          <label>🚚 Mode of Transfer:</label>
+          <label><i class="fas fa-truck-loading"></i> Mode of Transfer (Select One):</label>
           <div class="transfer-options">
-            <label><input type="checkbox" name="transfer" value="Courier" /> Courier</label>
-            <label><input type="checkbox" name="transfer" value="Bus" /> Bus</label>
-            <label><input type="checkbox" name="transfer" value="Air" /> Air</label>
-            <label><input type="checkbox" name="transfer" value="Others" /> Others</label>
+            <label><input type="radio" name="transfer" value="Courier" /> <span><i class="fas fa-box"></i> Courier</span></label>
+            <label><input type="radio" name="transfer" value="Bus" /> <span><i class="fas fa-bus"></i> Bus</span></label>
+            <label><input type="radio" name="transfer" value="Air" /> <span><i class="fas fa-plane"></i> Air</span></label>
+            <label><input type="radio" name="transfer" value="Others" /> <span><i class="fas fa-ellipsis-h"></i> Others</span></label>
           </div>
           <div id="transferError" class="validation-error"></div>
         </div>
 
-        <div class="form-section">
+        <div class="form-section" style="padding: 0; overflow: hidden;">
           <div class="input-scroll-container">
             <table id="stockTable">
               <colgroup>
                 <col style="width: 12%;">
-                <col style="width: 20%;">
+                <col style="width: 22%;">
                 <col style="width: 10%;">
                 <col style="width: 12%;">
                 <col style="width: 10%;">
                 <col style="width: 8%;">
                 <col style="width: 8%;">
                 <col style="width: 12%;">
-                <col style="width: 8%;">
+                <col style="width: 6%;">
               </colgroup>
               <thead>
                 <tr>
-                  <th>STOCK CODE</th>
-                  <th>PRODUCT DESCRIPTION</th>
-                  <th>QTY ONHAND</th>
-                  <th>LOCATION</th>
-                  <th>QTY REQUESTED</th>
+                  <th>Stock Code</th>
+                  <th>Product Description</th>
+                  <th>Qty Onhand</th>
+                  <th>Location (Bin)</th>
+                  <th>Qty Req</th>
                   <th>UOM</th>
-                  <th>TOTAL</th>
-                  <th>REMARKS</th>
-                  <th>ACTION</th>
+                  <th>Total</th>
+                  <th>Remarks</th>
+                  <th><i class="fas fa-cog"></i></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -511,47 +365,72 @@
         </div>
 
         <div class="action-buttons">
-          <button type="button" onclick="addRow()">➕ Add Row</button>
-          <button type="button" onclick="validateAndSubmit()">📤 Submit / Export PDF</button>
+          <button type="button" class="btn-add" onclick="addRow()"><i class="fas fa-plus"></i> Add Row</button>
+          <button type="button" onclick="validateAndSubmit()"><i class="fas fa-file-pdf"></i> Submit & Export PDF</button>
         </div>
 
-        <div class="form-section">
-          <div>
-            <label for="preparedBy">Prepared by:</label>
+        <div class="form-section" style="margin-top: 20px;">
+          <div class="form-group">
+            <label for="preparedBy"><i class="fas fa-user-edit"></i> Prepared by:</label>
             <input type="text" id="preparedBy" placeholder="Name of preparer" required />
             <div id="preparedByError" class="validation-error"></div>
           </div>
         </div>
+
       </form>
+
+      <div class="history-section">
+        <div class="history-header"><i class="fas fa-history"></i> Recent Submissions History</div>
+        <div class="input-scroll-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date & Time Submitted</th>
+                <th>Route (LOCATION ➔ BRANCH)</th>
+                <th>Mode</th>
+                <th>Items Qty</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr><td colspan="5" class="empty-history">No past submissions found.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
     
     <div class="messenger-footer">
-      <p style="text-align: center; margin: 0; font-size: 12px; color: #666;">
-        Created by gelocutler
-      </p>
+      <i class="fas fa-code"></i> System Created by <span class="creator-text">gelocutler</span>
     </div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", loadData);
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDraft();
+      loadHistory();
+    });
 
+    // TABLE ROW LOGIC
     function addRow(data = {}) {
       const tbody = document.querySelector("#stockTable tbody");
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td><input type="text" value="${data.stock_code || ""}" required></td>
-        <td><input type="text" value="${data.product_description || ""}" required></td>
-        <td><input type="text" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
-        <td><input type="text" value="${data.location || ""}" required></td>
-        <td><input type="text" value="${data.qty_requested || ""}" required class="qty-requested"></td>
-        <td><input type="text" value="${data.uom || ""}" required></td>
-        <td><input type="text" value="${data.total || ""}" readonly class="total-cell"></td>
-        <td><textarea rows="2">${data.remarks || ""}</textarea></td>
-        <td><button type="button" class="remove-btn" onclick="removeRow(this)">Remove</button></td>
+        <td><input type="text" placeholder="Code" value="${data.stock_code || ""}" required></td>
+        <td><input type="text" placeholder="Description" value="${data.product_description || ""}" required></td>
+        <td><input type="number" placeholder="0" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
+        <td><input type="text" placeholder="Bin/Loc" value="${data.location || ""}" required></td>
+        <td><input type="number" placeholder="0" value="${data.qty_requested || ""}" required class="qty-requested"></td>
+        <td><input type="text" placeholder="Pc/Bx" value="${data.uom || ""}" required></td>
+        <td><input type="number" placeholder="0" value="${data.total || ""}" readonly class="total-cell"></td>
+        <td><textarea rows="1" placeholder="Notes...">${data.remarks || ""}</textarea></td>
+        <td style="text-align: center; padding: 4px;">
+          <button type="button" class="remove-btn" title="Remove Row" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+        </td>
       `;
       tbody.appendChild(row);
       
-      // Add event listeners for calculation
       const onhandInput = row.querySelector('.qty-onhand');
       const requestedInput = row.querySelector('.qty-requested');
       const totalCell = row.querySelector('.total-cell');
@@ -564,82 +443,68 @@
       
       onhandInput.addEventListener('input', calculateTotal);
       requestedInput.addEventListener('input', calculateTotal);
+      
+      autoSaveDraft();
     }
 
     function removeRow(btn) {
       btn.closest("tr").remove();
-      autoSave();
+      autoSaveDraft();
     }
 
+    // FORM VALIDATION
     function validateForm() {
       let isValid = true;
       const errors = {
+        fromLocation: document.getElementById("fromLocationError"),
         branch: document.getElementById("branchError"),
         date: document.getElementById("dateError"),
         transfer: document.getElementById("transferError"),
         preparedBy: document.getElementById("preparedByError")
       };
 
-      // Clear previous errors
-      Object.values(errors).forEach(error => error.textContent = "");
+      Object.values(errors).forEach(error => error.innerHTML = "");
 
-      // Validate branch
-      const branch = document.getElementById("branch").value.trim();
-      if (!branch) {
-        errors.branch.textContent = "Branch is required";
-        isValid = false;
+      if (!document.getElementById("fromLocation").value.trim()) { errors.fromLocation.innerHTML = '<i class="fas fa-exclamation-circle"></i> From Location is required'; isValid = false; }
+      if (!document.getElementById("branch").value.trim()) { errors.branch.innerHTML = '<i class="fas fa-exclamation-circle"></i> To Branch is required'; isValid = false; }
+      if (!document.getElementById("date").value) { errors.date.innerHTML = '<i class="fas fa-exclamation-circle"></i> Date is required'; isValid = false; }
+      
+      if (!document.querySelector('input[name="transfer"]:checked')) { 
+        errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select one mode of transfer'; 
+        isValid = false; 
       }
 
-      // Validate date
-      const date = document.getElementById("date").value;
-      if (!date) {
-        errors.date.textContent = "Date is required";
-        isValid = false;
-      }
+      if (!document.getElementById("preparedBy").value.trim()) { errors.preparedBy.innerHTML = '<i class="fas fa-exclamation-circle"></i> Prepared by is required'; isValid = false; }
 
-      // Validate transfer method
-      const transferChecked = document.querySelectorAll('input[name="transfer"]:checked');
-      if (transferChecked.length === 0) {
-        errors.transfer.textContent = "At least one transfer method is required";
-        isValid = false;
-      }
-
-      // Validate prepared by
-      const preparedBy = document.getElementById("preparedBy").value.trim();
-      if (!preparedBy) {
-        errors.preparedBy.textContent = "Prepared by is required";
-        isValid = false;
-      }
-
-      // Validate table rows
       const rows = document.querySelectorAll("#stockTable tbody tr");
       if (rows.length === 0) {
         alert("Please add at least one row to the table");
         isValid = false;
       } else {
-        rows.forEach((row, index) => {
+        rows.forEach((row) => {
           const inputs = row.querySelectorAll("input[required]");
           inputs.forEach(input => {
             if (!input.value.trim()) {
               isValid = false;
-              // Highlight empty fields
-              input.style.borderColor = "#e74c3c";
+              input.style.border = "2px solid #e74c3c";
             } else {
-              input.style.borderColor = "transparent";
+              input.style.border = "2px solid transparent";
             }
           });
         });
       }
-
       return isValid;
     }
 
+    // DATA COLLECTION
     function collectData() {
+      const selectedTransfer = document.querySelector('input[name="transfer"]:checked');
       return {
+        fromLocation: document.getElementById("fromLocation").value,
         branch: document.getElementById("branch").value,
         date: document.getElementById("date").value,
         preparedBy: document.getElementById("preparedBy").value,
-        transfer: Array.from(document.querySelectorAll('input[name="transfer"]:checked')).map((el) => el.value),
+        transfer: selectedTransfer ? selectedTransfer.value : "",
         rows: Array.from(document.querySelectorAll("#stockTable tbody tr")).map((tr) => {
           const inputs = tr.querySelectorAll("input, textarea");
           return {
@@ -656,208 +521,194 @@
       };
     }
 
-    function saveData() {
-      localStorage.setItem("stockRequestForm", JSON.stringify(collectData()));
+    // AUTO-SAVE DRAFT 
+    function autoSaveDraft() {
+      localStorage.setItem("stockDraft", JSON.stringify(collectData()));
     }
 
-    function autoSave() {
-      localStorage.setItem("stockRequestForm", JSON.stringify(collectData()));
-    }
-
-    function loadData() {
-      const saved = localStorage.getItem("stockRequestForm");
-      if (!saved) {
-        addRow();
-        return;
-      }
+    function loadDraft() {
+      const saved = localStorage.getItem("stockDraft");
+      if (!saved) { addRow(); return; }
+      
       const data = JSON.parse(saved);
+      document.getElementById("fromLocation").value = data.fromLocation || "";
       document.getElementById("branch").value = data.branch || "";
       document.getElementById("date").value = data.date || "";
       document.getElementById("preparedBy").value = data.preparedBy || "";
-      document.querySelectorAll('input[name="transfer"]').forEach(
-        (el) => (el.checked = data.transfer?.includes(el.value))
-      );
+      
+      if(data.transfer) {
+        const radio = document.querySelector(`input[name="transfer"][value="${data.transfer}"]`);
+        if(radio) radio.checked = true;
+      }
+
       const tbody = document.querySelector("#stockTable tbody");
       tbody.innerHTML = "";
       (data.rows || []).forEach((r) => addRow(r));
       if (data.rows.length === 0) addRow();
-      document.querySelectorAll("input, textarea").forEach((el) => el.addEventListener("input", autoSave));
+      
+      document.getElementById("stockForm").addEventListener("input", autoSaveDraft);
     }
 
-    // ✅ PDF Export with perfect centering and enhanced design
-    function validateAndSubmit() {
-      if (validateForm()) {
-        submitForm();
+    function clearDraftForm() {
+      document.getElementById("fromLocation").value = "";
+      document.getElementById("branch").value = "";
+      document.getElementById("preparedBy").value = "";
+      const radios = document.querySelectorAll('input[name="transfer"]');
+      radios.forEach(r => r.checked = false);
+      
+      document.querySelector("#stockTable tbody").innerHTML = "";
+      addRow();
+      localStorage.removeItem("stockDraft");
+    }
+
+    // HISTORY LOGIC
+    function saveToHistory(data) {
+      let history = JSON.parse(localStorage.getItem('stockHistory') || '[]');
+      
+      const newEntry = {
+        timestamp: new Date().toLocaleString(),
+        route: `${data.fromLocation.toUpperCase()} ➔ ${data.branch.toUpperCase()}`,
+        transfer: data.transfer,
+        itemCount: data.rows.length
+      };
+      
+      history.unshift(newEntry); // Add to top
+      localStorage.setItem('stockHistory', JSON.stringify(history));
+      loadHistory();
+    }
+
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('stockHistory') || '[]');
+      const tbody = document.getElementById("historyBody");
+      
+      if (history.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-history">No past submissions found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = "";
+      history.forEach((entry, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${entry.timestamp}</td>
+          <td><strong class="route-text">${entry.route}</strong></td>
+          <td>${entry.transfer}</td>
+          <td>${entry.itemCount} items</td>
+          <td><button class="btn-delete-history" onclick="deleteHistory(${index})"><i class="fas fa-trash"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function deleteHistory(index) {
+      if(confirm("Are you sure you want to delete this record from history?")) {
+        let history = JSON.parse(localStorage.getItem('stockHistory') || '[]');
+        history.splice(index, 1);
+        localStorage.setItem('stockHistory', JSON.stringify(history));
+        loadHistory();
       }
     }
 
-    function submitForm() {
-      saveData();
+    // PDF EXPORT
+    function validateAndSubmit() {
+      if (validateForm()) {
+        const data = collectData();
+        generatePDF(data);
+        saveToHistory(data);
+        clearDraftForm();
+      }
+    }
+
+    function generatePDF(data) {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
 
-      // Title
       doc.setFontSize(18);
-      doc.setTextColor(43, 61, 82);
+      doc.setTextColor(30, 60, 114);
       doc.text("COMPLETESOLUTION PHARMACY", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
       
       doc.setFontSize(14);
+      doc.setTextColor(100, 100, 100);
       doc.text("STOCK TRANSFER REQUEST", doc.internal.pageSize.getWidth() / 2, 60, { align: "center" });
       
-      // Form details in table format
-      doc.setFontSize(10);
-      doc.setTextColor(0, 0, 0);
-      
-      const data = collectData();
       const pageWidth = doc.internal.pageSize.getWidth();
       
-      // Create a table for form details
-      const detailsHeaders = ["Field", "Value"];
+      const detailsHeaders = ["Field", "Details"];
       const detailsRows = [
-        ["Branch", data.branch],
+        ["From Location", data.fromLocation],
+        ["To Branch", data.branch],
         ["Date of Request", data.date],
-        ["Mode of Transfer", data.transfer.join(", ")]
+        ["Mode of Transfer", data.transfer]
       ];
       
-      // Calculate table dimensions
       const tableWidth = 400;
       const startX = (pageWidth - tableWidth) / 2;
-      const startY = 90;
       
-      // Define table options for form details
-      const detailsTableOptions = {
-        startY: startY,
+      doc.autoTable({
+        startY: 90,
         head: [detailsHeaders],
         body: detailsRows,
         theme: "grid",
-        styles: {
-          fontSize: 9,
-          cellPadding: { top: 6, right: 6, bottom: 6, left: 6 },
-          overflow: "linebreak",
-          valign: "top",
-          lineColor: [180, 180, 180],
-          lineWidth: 0.2
-        },
-        columnStyles: {
-          0: { cellWidth: 120 },
-          1: { cellWidth: 280 }
-        },
-        headStyles: {
-          fillColor: [43, 61, 82],
-          textColor: 255,
-          fontStyle: "bold",
-          halign: "center",
-          lineWidth: 0.2
-        },
-        margin: { left: startX, right: startX },
-        bodyStyles: { 
-          lineWidth: 0.1,
-          fillColor: [255, 255, 255]
-        }
-      };
-
-      // Generate the form details table
-      doc.autoTable(detailsTableOptions);
+        styles: { fontSize: 10, cellPadding: 6 },
+        columnStyles: { 0: { cellWidth: 120, fontStyle: 'bold' }, 1: { cellWidth: 280 } },
+        headStyles: { fillColor: [30, 60, 114], textColor: 255 },
+        margin: { left: startX, right: startX }
+      });
       
-      // Table headers
-      const headers = [
-        "Stock Code",
-        "Product Description",
-        "Qty Onhand",
-        "Location",
-        "Qty Requested",
-        "UOM",
-        "Total",
-        "Remarks"
-      ];
+      const headers = ["Stock Code", "Product Description", "Qty Onhand", "Location (Bin)", "Qty Req", "UOM", "Total", "Remarks"];
+      const rows = data.rows.map((r) => [
+        r.stock_code, r.product_description, r.qty_onhand, r.location, r.qty_requested, r.uom, r.total,
+        r.remarks ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim() : ""
+      ]);
 
-      // Table data with proper formatting
-      const rows = data.rows.map((r) => {
-        const wrappedRemarks = r.remarks
-          ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim()
-          : "";
-        return [
-          r.stock_code,
-          r.product_description,
-          r.qty_onhand,
-          r.location,
-          r.qty_requested,
-          r.uom,
-          r.total,
-          wrappedRemarks
-        ];
+      const colWidths = {0:60, 1:180, 2:60, 3:70, 4:70, 5:40, 6:50, 7:160};
+      const finalColWidths = {};
+      const maxUsableWidth = pageWidth - 80;
+      const totalDesiredWidth = Object.values(colWidths).reduce((a,b)=>a+b,0);
+      const scaleFactor = totalDesiredWidth > maxUsableWidth ? maxUsableWidth / totalDesiredWidth : 1;
+      Object.keys(colWidths).forEach(k => finalColWidths[k] = Math.floor(colWidths[k] * scaleFactor));
+
+      const columnStyles = {};
+      for(const idx in finalColWidths){
+        columnStyles[idx] = {cellWidth: finalColWidths[idx], halign: (idx>=2 && idx<=6) ? "center" : "left"};
+      }
+
+      doc.autoTable({
+        startY: doc.lastAutoTable.finalY + 30,
+        head: [headers],
+        body: rows,
+        theme: "grid",
+        styles: { fontSize: 9, cellPadding: 5 },
+        columnStyles: columnStyles,
+        headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
+        margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2 },
+        didParseCell: function(cellData) {
+          if(cellData.column.index === 4 && cellData.section === 'body') {
+            cellData.cell.styles.fillColor = [255, 251, 235];
+            cellData.cell.styles.textColor = [180, 83, 9];
+            cellData.cell.styles.fontStyle = "bold";
+          }
+        }
       });
 
-      // Define table options for stock items with proper column widths
-      (function() {
-        const colWidths = {0:60,1:180,2:50,3:60,4:60,5:40,6:50,7:160};
-        const totalDesiredWidth = Object.values(colWidths).reduce((a,b)=>a+b,0);
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageMargin = 40;
-        const maxUsableWidth = pageWidth - (pageMargin*2);
-
-        let scaleFactor = 1;
-        if (totalDesiredWidth > maxUsableWidth) scaleFactor = maxUsableWidth / totalDesiredWidth;
-
-        const finalColWidths = {};
-        Object.keys(colWidths).forEach(k=>finalColWidths[k]=Math.floor(colWidths[k]*scaleFactor));
-
-        const columnStyles = {};
-        for(const idx in finalColWidths){
-          columnStyles[idx]={cellWidth:finalColWidths[idx],halign:(idx>=2&&idx<=6)?"center":"left"};
-        }
-
-        const tableOptions = {
-          startY: doc.lastAutoTable.finalY + 30,
-          head:[headers],
-          body:rows,
-          theme:"grid",
-          styles:{fontSize:8,cellPadding:4,overflow:"linebreak",valign:"top",lineColor:[180,180,180],lineWidth:0.2},
-          columnStyles:columnStyles,
-          headStyles:{fillColor:[43,61,82],textColor:255,fontStyle:"bold",halign:"center"},
-          tableWidth:Object.values(finalColWidths).reduce((a,b)=>a+b,0),
-          margin:{left:(pageWidth-Object.values(finalColWidths).reduce((a,b)=>a+b,0))/2},
-          bodyStyles:{fillColor:[255,255,255]},
-          alternateRowStyles:{fillColor:[248,249,250]},
-          didParseCell:function(data){
-            if(data.column.index===4){
-              data.cell.styles.fillColor=[255,248,225];
-              data.cell.styles.textColor=[231,76,60];
-              data.cell.styles.fontStyle="bold";
-            }
-          },
-          pageBreak:'auto'
-        };
-        
-        // Only call autoTable once with the correct options
-        doc.autoTable(tableOptions);
-      })();
-
-      // Footer
+      const timestamp = `PDF Generated on: ${new Date().toLocaleString()}`;
       doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Prepared by: ${data.preparedBy}`, 40, doc.lastAutoTable.finalY + 40);
+      doc.text(timestamp, pageWidth - 40, doc.lastAutoTable.finalY + 40, { align: "right" });
       
-      // Setup Timestamp
-      const generationDate = new Date();
-      const timestamp = `PDF Generated on: ${generationDate.toLocaleString()}`;
+      doc.setTextColor(150, 150, 150);
+      doc.text("System Created by gelocutler", pageWidth / 2, doc.lastAutoTable.finalY + 60, { align: "center" });
 
-      doc.text(`Prepared by: ${data.preparedBy}`, 40, doc.lastAutoTable.finalY + 30);
-      doc.text(timestamp, pageWidth - 40, doc.lastAutoTable.finalY + 30, { align: "right" }); // Added the timestamp here
-      
-      doc.text("System Created by gelocutler", pageWidth / 2, doc.lastAutoTable.finalY + 50, { align: "center" });
-
-      doc.save("Stock_Transfer_Form.pdf");
-      alert("✅ PDF successfully generated!");
+      doc.save(`StockTransfer_${data.fromLocation.replace(/\s+/g, '_')}_to_${data.branch.replace(/\s+/g, '_')}_${data.date}.pdf`);
+      alert("✅ Submission successful! PDF generated and saved to history.");
     }
     
-    // 🕒 Real-time Clock + Calendar
+    // CLOCK & CALENDAR
     function updateDateTime() {
       const now = new Date();
-    
       const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-      const months = [
-        "January","February","March","April","May","June",
-        "July","August","September","October","November","December"
-      ];
+      const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     
       document.getElementById("dayName").textContent = days[now.getDay()];
       document.getElementById("dateNumber").textContent = String(now.getDate()).padStart(2, "0");
@@ -869,14 +720,12 @@
       const ampm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12;
     
-      document.getElementById("clock").textContent = 
-        `${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")} ${ampm}`;
+      document.getElementById("clock").innerHTML = 
+        `<i class="far fa-clock"></i> ${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")} ${ampm}`;
     }
     
-    // Update every second
     setInterval(updateDateTime, 1000);
     updateDateTime();
-
   </script>
 </body>
 </html>
