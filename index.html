@@ -32,8 +32,70 @@
       line-height: 1.5;
     }
 
-    .messenger-container {
+    /* SPLASH SCREEN INTRO */
+    #splash-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #0f172a);
+      background-size: 200% 200%;
+      z-index: 9999;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: opacity 0.8s ease-out, visibility 0.8s;
+      animation: gradientShift 5s ease infinite;
+    }
+
+    .splash-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-align: center;
+      margin-bottom: 10px;
+      animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      padding: 0 20px;
+    }
+
+    .splash-subtitle {
+      font-size: 14px;
+      letter-spacing: 5px;
+      opacity: 0;
+      animation: slideUp 1s ease-out 0.5s forwards;
+      color: #cbd5e0;
+    }
+
+    .splash-creator {
+      margin-top: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #38bdf8;
+      opacity: 0;
+      animation: neonPulse 1.5s infinite alternate, slideUp 1s ease-out 1s forwards;
+    }
+
+    .loader-ring {
+      margin-top: 30px;
+      width: 40px; height: 40px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      opacity: 0;
+      animation: spin 1s linear infinite, fade-in 0.5s ease-out 1.2s forwards;
+    }
+
+    @keyframes gradientShift { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+    @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes slideUp { 0% { transform: translateY(20px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes fade-in { 100% { opacity: 1; } }
+
+    /* MESSENGER APP LAYOUT */
+    .messenger-container {
+      display: none; /* Hidden strictly while splash is active */
       flex-direction: column;
       max-width: 900px;
       margin: 0 auto;
@@ -41,7 +103,10 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      animation: fadeInApp 1s ease-in;
     }
+
+    @keyframes fadeInApp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     .messenger-header {
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -52,106 +117,58 @@
       overflow: hidden;
     }
 
-    .messenger-header h1 {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin: 0;
-    }
+    .messenger-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; margin: 0; }
 
     .animated-title {
-      font-weight: 400;
-      font-size: 14px;
-      margin: 8px 0 0;
-      letter-spacing: 3px;
-      color: #ffd700;
-      animation: slideFade 3s ease-in-out infinite alternate;
+      font-weight: 400; font-size: 14px; margin: 8px 0 0; letter-spacing: 3px; color: #ffd700;
+      animation: neonTitlePulse 3s ease-in-out infinite alternate;
     }
 
-    @keyframes slideFade {
-      0% { opacity: 0.5; transform: translateX(-10px); }
-      100% { opacity: 1; transform: translateX(10px); text-shadow: 0 0 8px rgba(255, 215, 0, 0.6); }
+    @keyframes neonTitlePulse {
+      0% { opacity: 0.5; transform: translateX(-5px); text-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
+      100% { opacity: 1; transform: translateX(5px); text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    /* 🕒 Date-Time Widget */
     .date-time-container {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      padding: 15px;
-      background-color: #f8fafc;
-      border-bottom: 1px solid var(--border-color);
+      display: flex; justify-content: center; gap: 15px; padding: 15px;
+      background-color: #f8fafc; border-bottom: 1px solid var(--border-color);
     }
-
     .calendar {
-      background: linear-gradient(135deg, #2b5876, #4e4376);
-      padding: 10px 20px;
-      border-radius: 8px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      min-width: 120px;
+      background: linear-gradient(135deg, #2b5876, #4e4376); padding: 10px 20px;
+      border-radius: 8px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); min-width: 120px;
     }
-    
     .calendar .day-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
     .calendar .date-number { font-size: 28px; font-weight: 700; margin: -2px 0; }
     .calendar .month-year { font-size: 11px; opacity: 0.85; }
     
     .clock-wrapper { display: flex; align-items: center; }
-
     .clock {
-      background: #ffffff;
-      color: var(--primary-color);
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 1px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: #ffffff; color: var(--primary-color); padding: 12px 20px; border-radius: 8px;
+      font-weight: 700; font-size: 18px; letter-spacing: 1px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px;
     }
 
     .messenger-body { padding: 20px; }
 
     .form-section {
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      background: #fff; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);
+      margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .form-row { display: flex; gap: 15px; flex-wrap: wrap; }
     .form-group { flex: 1; min-width: 200px; }
 
-    label {
-      font-weight: 600;
-      color: #4a5568;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-      font-size: 13px;
-    }
+    label { font-weight: 600; color: #4a5568; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; }
 
-    input[type="text"], input[type="date"], textarea {
+    input[type="text"], input[type="date"], select, textarea {
       width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0;
-      border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box;
-      font-family: "Inter", sans-serif;
+      border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; font-family: "Inter", sans-serif;
     }
 
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--secondary-color); background: #f0f4f8; outline: none;
-    }
+    input:focus, select:focus, textarea:focus { border-color: var(--secondary-color); background: #f0f4f8; outline: none; }
 
+    /* RADIO BUTTONS & DYNAMIC INPUTS */
     .transfer-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
     .transfer-options label {
       flex: 1; min-width: 100px; font-size: 13px; padding: 10px;
@@ -162,8 +179,16 @@
     .transfer-options input[type="radio"]:checked + span { font-weight: bold; color: var(--primary-color); }
     .transfer-options input[type="radio"] { margin-right: 8px; cursor: pointer; accent-color: var(--primary-color); }
 
+    .dynamic-transfer-input {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+      animation: fadeInApp 0.3s ease-out;
+    }
+
     .input-scroll-container { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color); }
 
+    /* TABLE */
     table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 12px; }
     th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 0; vertical-align: middle; }
     th { background-color: #f1f5f9; color: #475569; text-transform: uppercase; font-size: 11px; font-weight: 700; text-align: center; padding: 12px 8px; }
@@ -171,13 +196,23 @@
     tr:last-child td { border-bottom: none; }
     tr:nth-child(even) { background-color: #f8fafc; }
 
-    td input, td textarea, td select {
+    td input, td select, td textarea {
       width: 100%; height: 100%; border: 2px solid transparent; background: transparent;
-      font-size: 12px; padding: 10px 8px; box-sizing: border-box; border-radius: 0; font-family: "Inter", sans-serif;
+      resize: vertical; font-size: 12px; padding: 10px 8px; box-sizing: border-box; border-radius: 0;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
     }
-    td select { appearance: none; cursor: pointer; color: #333; }
+    
+    /* Make td select look good and have a custom dropdown arrow */
+    td select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234a5568%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat, repeat;
+      background-position: right .7em top 50%, 0 0;
+      background-size: .65em auto, 100%;
+      padding-right: 20px;
+      cursor: pointer;
+    }
 
-    td input:focus, td textarea:focus, td select:focus {
+    td input:focus, td select:focus, td textarea:focus {
       background: #fff; border: 2px solid var(--secondary-color); border-radius: 4px; position: relative; z-index: 1;
     }
 
@@ -204,17 +239,14 @@
 
     .validation-error { color: var(--danger-color); font-size: 11px; margin-top: 4px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
 
+    /* HISTORY SECTION */
     .history-section { margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 20px; }
     .history-header { font-size: 16px; font-weight: 700; color: var(--primary-color); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
     .history-table { min-width: 100%; border: 1px solid var(--border-color); }
     .history-table th { background: #e2e8f0; font-size: 12px; }
     .history-table td { padding: 10px; text-align: center; font-size: 12px; }
     .empty-history { text-align: center; color: #94a3b8; font-style: italic; padding: 20px; }
-
-    .route-text {
-      color: var(--primary-color); background: #f1f5f9; padding: 4px 10px;
-      border-radius: 4px; display: inline-block; border: 1px solid #cbd5e0;
-    }
+    .route-text { color: var(--primary-color); background: #f1f5f9; padding: 4px 10px; border-radius: 4px; display: inline-block; border: 1px solid #cbd5e0; }
 
     .btn-delete-history {
       background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color);
@@ -222,6 +254,7 @@
     }
     .btn-delete-history:hover { background: var(--danger-color); color: white; }
 
+    /* ANIMATED FOOTER */
     .messenger-footer { background-color: #0f172a; padding: 15px; text-align: center; font-size: 13px; font-weight: 600; color: #94a3b8; }
     .creator-text { color: #38bdf8; animation: neonPulse 2s infinite alternate; }
 
@@ -244,8 +277,8 @@
     }
 
     @media print {
-      button, .action-buttons, .history-section { display: none; }
-      .messenger-container { box-shadow: none; max-width: 100%; }
+      button, .action-buttons, .history-section, #splash-screen { display: none !important; }
+      .messenger-container { box-shadow: none; max-width: 100%; display: flex !important; }
       .date-time-container { border: none; }
       .animated-title { animation: none; color: #666; text-shadow: none; }
     }
@@ -253,7 +286,14 @@
 </head>
 
 <body>
-  <div class="messenger-container">
+  <div id="splash-screen">
+    <div class="splash-title">STOCK TRANSFER REQUEST</div>
+    <div class="splash-subtitle">COMPLETESOLUTION PHARMACY</div>
+    <div class="splash-creator">Created by gelocutler</div>
+    <div class="loader-ring"></div>
+  </div>
+
+  <div class="messenger-container" id="main-app">
     <div class="messenger-header">
       <h1>COMPLETESOLUTION PHARMACY</h1>
       <h2 class="animated-title"><i class="fas fa-exchange-alt"></i> STOCK TRANSFER REQUEST</h2>
@@ -296,28 +336,26 @@
         <div class="form-section">
           <label><i class="fas fa-truck-loading"></i> Mode of Transfer (Select One):</label>
           <div class="transfer-options">
-            <label><input type="radio" name="transfer" value="Courier" onchange="toggleTransferDetails()" /> <span><i class="fas fa-box"></i> Courier</span></label>
-            <label><input type="radio" name="transfer" value="Bus" onchange="toggleTransferDetails()" /> <span><i class="fas fa-bus"></i> Bus</span></label>
-            <label><input type="radio" name="transfer" value="Air" onchange="toggleTransferDetails()" /> <span><i class="fas fa-plane"></i> Air</span></label>
-            <label><input type="radio" name="transfer" value="Others" onchange="toggleTransferDetails()" /> <span><i class="fas fa-ellipsis-h"></i> Others</span></label>
+            <label><input type="radio" name="transfer" value="Courier" onchange="toggleTransferInputs()" /> <span><i class="fas fa-box"></i> Courier</span></label>
+            <label><input type="radio" name="transfer" value="Bus" onchange="toggleTransferInputs()" /> <span><i class="fas fa-bus"></i> Bus</span></label>
+            <label><input type="radio" name="transfer" value="Air" onchange="toggleTransferInputs()" /> <span><i class="fas fa-plane"></i> Air</span></label>
+            <label><input type="radio" name="transfer" value="Others" onchange="toggleTransferInputs()" /> <span><i class="fas fa-ellipsis-h"></i> Others</span></label>
           </div>
+          <div id="transferError" class="validation-error"></div>
           
-          <div id="courierDetails" style="display: none; margin-top: 15px; animation: fadeIn 0.3s;">
-            <label for="courierSelect" style="font-size: 12px; color: var(--primary-color);">Select Courier Provider:</label>
-            <select id="courierSelect" style="width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 14px; font-family: 'Inter', sans-serif;" onchange="autoSaveDraft()">
+          <div id="courierDetails" class="dynamic-transfer-input" style="display: none;">
+            <label for="courierSelect"><i class="fas fa-truck"></i> Select Courier:</label>
+            <select id="courierSelect" onchange="autoSaveDraft()">
               <option value="LBC">LBC</option>
               <option value="DHL">DHL</option>
-              <option value="BUS">BUS</option>
               <option value="LALAMOVE">LALAMOVE</option>
             </select>
           </div>
 
-          <div id="otherDetails" style="display: none; margin-top: 15px; animation: fadeIn 0.3s;">
-            <label for="otherTransfer" style="font-size: 12px; color: var(--primary-color);">Please Specify Mode of Transfer:</label>
-            <input type="text" id="otherTransfer" placeholder="Type your preferred transfer method..." oninput="autoSaveDraft()" />
+          <div id="othersDetails" class="dynamic-transfer-input" style="display: none;">
+            <label for="othersInput"><i class="fas fa-keyboard"></i> Specify Other Mode:</label>
+            <input type="text" id="othersInput" placeholder="Type here..." oninput="autoSaveDraft()" />
           </div>
-
-          <div id="transferError" class="validation-error"></div>
         </div>
 
         <div class="form-section" style="padding: 0; overflow: hidden;">
@@ -330,8 +368,8 @@
                 <col style="width: 12%;">
                 <col style="width: 10%;">
                 <col style="width: 10%;"> <col style="width: 8%;">
-                <col style="width: 12%;">
-                <col style="width: 4%;">
+                <col style="width: 10%;">
+                <col style="width: 6%;">
               </colgroup>
               <thead>
                 <tr>
@@ -394,42 +432,69 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      loadDraft();
-      loadHistory();
+    // SPLASH SCREEN LOGIC
+    window.addEventListener('load', () => {
+      const splash = document.getElementById('splash-screen');
+      const mainApp = document.getElementById('main-app');
+      
+      setTimeout(() => {
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+        
+        setTimeout(() => {
+          splash.style.display = 'none';
+          mainApp.style.display = 'flex';
+          loadDraft();
+          loadHistory();
+        }, 800); // Wait for transition to finish
+      }, 3500); // 3.5 seconds splash screen duration
     });
 
-    // DYNAMIC TRANSFER UI LOGIC
-    function toggleTransferDetails() {
-      const val = document.querySelector('input[name="transfer"]:checked')?.value;
-      document.getElementById('courierDetails').style.display = (val === 'Courier') ? 'block' : 'none';
-      document.getElementById('otherDetails').style.display = (val === 'Others') ? 'block' : 'none';
+    // DYNAMIC TRANSFER INPUTS TOGGLE
+    function toggleTransferInputs() {
+      const selected = document.querySelector('input[name="transfer"]:checked')?.value;
+      const courierDiv = document.getElementById('courierDetails');
+      const othersDiv = document.getElementById('othersDetails');
+      
+      courierDiv.style.display = selected === 'Courier' ? 'block' : 'none';
+      othersDiv.style.display = selected === 'Others' ? 'block' : 'none';
+      
       autoSaveDraft();
     }
 
-    // TABLE ROW LOGIC
+    // GET FINAL TRANSFER VALUE
+    function getTransferValue() {
+      const selected = document.querySelector('input[name="transfer"]:checked');
+      if (!selected) return "";
+      
+      if (selected.value === "Courier") {
+        return "Courier - " + document.getElementById("courierSelect").value;
+      } else if (selected.value === "Others") {
+        return "Others - " + document.getElementById("othersInput").value;
+      }
+      return selected.value;
+    }
+
+    // TABLE ROW LOGIC WITH UOM DROPDOWN
     function addRow(data = {}) {
       const tbody = document.querySelector("#stockTable tbody");
       const row = document.createElement("tr");
       
-      // Updated UOM with Dropdown
+      const uomValue = data.uom || "TABS";
+      const uomOptions = ["TABS", "CAPS", "BOXS", "PFS", "VIALS", "AMPS"];
+      let uomSelectHTML = `<select required class="uom-select" onchange="autoSaveDraft()">`;
+      uomOptions.forEach(opt => {
+        uomSelectHTML += `<option value="${opt}" ${uomValue === opt ? 'selected' : ''}>${opt}</option>`;
+      });
+      uomSelectHTML += `</select>`;
+
       row.innerHTML = `
         <td><input type="text" placeholder="Code" value="${data.stock_code || ""}" required></td>
         <td><input type="text" placeholder="Description" value="${data.product_description || ""}" required></td>
         <td><input type="number" placeholder="0" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
         <td><input type="text" placeholder="Bin/Loc" value="${data.location || ""}" required></td>
         <td><input type="number" placeholder="0" value="${data.qty_requested || ""}" required class="qty-requested"></td>
-        <td>
-          <select required>
-            <option value="" disabled ${!data.uom ? "selected" : ""}>Select</option>
-            <option value="TABS" ${data.uom === "TABS" ? "selected" : ""}>TABS</option>
-            <option value="CAPS" ${data.uom === "CAPS" ? "selected" : ""}>CAPS</option>
-            <option value="BOXS" ${data.uom === "BOXS" ? "selected" : ""}>BOXS</option>
-            <option value="PFS" ${data.uom === "PFS" ? "selected" : ""}>PFS</option>
-            <option value="VIALS" ${data.uom === "VIALS" ? "selected" : ""}>VIALS</option>
-            <option value="AMPS" ${data.uom === "AMPS" ? "selected" : ""}>AMPS</option>
-          </select>
-        </td>
+        <td>${uomSelectHTML}</td>
         <td><input type="number" placeholder="0" value="${data.total || ""}" readonly class="total-cell"></td>
         <td><textarea rows="1" placeholder="Notes...">${data.remarks || ""}</textarea></td>
         <td style="text-align: center; padding: 4px;">
@@ -450,6 +515,12 @@
       
       onhandInput.addEventListener('input', calculateTotal);
       requestedInput.addEventListener('input', calculateTotal);
+      
+      // Auto-save triggers
+      row.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('input', autoSaveDraft);
+        el.addEventListener('change', autoSaveDraft);
+      });
       
       autoSaveDraft();
     }
@@ -476,15 +547,13 @@
       if (!document.getElementById("branch").value.trim()) { errors.branch.innerHTML = '<i class="fas fa-exclamation-circle"></i> To Branch is required'; isValid = false; }
       if (!document.getElementById("date").value) { errors.date.innerHTML = '<i class="fas fa-exclamation-circle"></i> Date is required'; isValid = false; }
       
-      const transferRadio = document.querySelector('input[name="transfer"]:checked');
-      if (!transferRadio) { 
+      const selectedTransfer = document.querySelector('input[name="transfer"]:checked');
+      if (!selectedTransfer) { 
         errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select one mode of transfer'; 
         isValid = false; 
-      } else {
-        if (transferRadio.value === 'Others' && !document.getElementById("otherTransfer").value.trim()) {
-           errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please specify the mode of transfer'; 
-           isValid = false;
-        }
+      } else if (selectedTransfer.value === "Others" && !document.getElementById("othersInput").value.trim()) {
+        errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please specify the other transfer mode';
+        isValid = false;
       }
 
       if (!document.getElementById("preparedBy").value.trim()) { errors.preparedBy.innerHTML = '<i class="fas fa-exclamation-circle"></i> Prepared by is required'; isValid = false; }
@@ -495,7 +564,6 @@
         isValid = false;
       } else {
         rows.forEach((row) => {
-          // Check inputs and select dropdowns
           const inputs = row.querySelectorAll("input[required], select[required]");
           inputs.forEach(input => {
             if (!input.value.trim()) {
@@ -512,35 +580,28 @@
 
     // DATA COLLECTION
     function collectData() {
-      const selectedTransfer = document.querySelector('input[name="transfer"]:checked');
       return {
         fromLocation: document.getElementById("fromLocation").value,
         branch: document.getElementById("branch").value,
         date: document.getElementById("date").value,
         preparedBy: document.getElementById("preparedBy").value,
-        transfer: selectedTransfer ? selectedTransfer.value : "",
-        courierDetail: document.getElementById("courierSelect").value,
-        otherDetail: document.getElementById("otherTransfer").value,
+        transferRaw: document.querySelector('input[name="transfer"]:checked')?.value || "",
+        transferCourier: document.getElementById("courierSelect").value,
+        transferOthers: document.getElementById("othersInput").value,
+        transferFinal: getTransferValue(),
         rows: Array.from(document.querySelectorAll("#stockTable tbody tr")).map((tr) => {
-          const inputs = tr.querySelectorAll("input, select, textarea");
           return {
-            stock_code: inputs[0].value,
-            product_description: inputs[1].value,
-            qty_onhand: inputs[2].value,
-            location: inputs[3].value,
-            qty_requested: inputs[4].value,
-            uom: inputs[5].value, // This is now the <select> value
-            total: inputs[6].value,
-            remarks: inputs[7].value,
+            stock_code: tr.querySelector('td:nth-child(1) input').value,
+            product_description: tr.querySelector('td:nth-child(2) input').value,
+            qty_onhand: tr.querySelector('td:nth-child(3) input').value,
+            location: tr.querySelector('td:nth-child(4) input').value,
+            qty_requested: tr.querySelector('td:nth-child(5) input').value,
+            uom: tr.querySelector('td:nth-child(6) select').value, // NOW GRABBING FROM SELECT
+            total: tr.querySelector('td:nth-child(7) input').value,
+            remarks: tr.querySelector('td:nth-child(8) textarea').value,
           };
         }),
       };
-    }
-
-    function getFormattedTransfer(data) {
-      if (data.transfer === 'Courier') return `Courier (${data.courierDetail})`;
-      if (data.transfer === 'Others') return data.otherDetail ? data.otherDetail.toUpperCase() : 'OTHERS';
-      return data.transfer;
     }
 
     // AUTO-SAVE DRAFT 
@@ -558,15 +619,14 @@
       document.getElementById("date").value = data.date || "";
       document.getElementById("preparedBy").value = data.preparedBy || "";
       
-      if(data.transfer) {
-        const radio = document.querySelector(`input[name="transfer"][value="${data.transfer}"]`);
-        if(radio) {
-           radio.checked = true;
-           toggleTransferDetails();
-        }
+      if(data.transferRaw) {
+        const radio = document.querySelector(`input[name="transfer"][value="${data.transferRaw}"]`);
+        if(radio) radio.checked = true;
+        
+        document.getElementById("courierSelect").value = data.transferCourier || "LBC";
+        document.getElementById("othersInput").value = data.transferOthers || "";
+        toggleTransferInputs(); // Re-trigger UI state
       }
-      if(data.courierDetail) document.getElementById("courierSelect").value = data.courierDetail;
-      if(data.otherDetail) document.getElementById("otherTransfer").value = data.otherDetail;
 
       const tbody = document.querySelector("#stockTable tbody");
       tbody.innerHTML = "";
@@ -580,11 +640,11 @@
       document.getElementById("fromLocation").value = "";
       document.getElementById("branch").value = "";
       document.getElementById("preparedBy").value = "";
-      document.getElementById("otherTransfer").value = "";
+      document.getElementById("othersInput").value = "";
       
       const radios = document.querySelectorAll('input[name="transfer"]');
       radios.forEach(r => r.checked = false);
-      toggleTransferDetails();
+      toggleTransferInputs(); // Hide sub-menus
       
       document.querySelector("#stockTable tbody").innerHTML = "";
       addRow();
@@ -598,7 +658,7 @@
       const newEntry = {
         timestamp: new Date().toLocaleString(),
         route: `${data.fromLocation.toUpperCase()} ➔ ${data.branch.toUpperCase()}`,
-        transfer: getFormattedTransfer(data),
+        transfer: data.transferFinal, // Use the finalized string
         itemCount: data.rows.length
       };
       
@@ -668,7 +728,7 @@
         ["From Location", data.fromLocation],
         ["To Branch", data.branch],
         ["Date of Request", data.date],
-        ["Mode of Transfer", getFormattedTransfer(data)]
+        ["Mode of Transfer", data.transferFinal] // Displays Courier - LBC or Others - [Text]
       ];
       
       const tableWidth = 400;
