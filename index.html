@@ -13,76 +13,88 @@
 
   <style>
     :root {
-      --primary-color: #1e3c72;
-      --secondary-color: #2a5298;
-      --accent-color: #f39c12;
-      --danger-color: #e74c3c;
-      --bg-color: #1e293b; /* Parehas na sa intro background */
-      --text-color: #333;
-      --border-color: #e0e6ed;
+      /* Soft, modern color palette - Hindi masakit sa mata */
+      --primary-color: #3b82f6; /* Soft Blue */
+      --primary-hover: #2563eb;
+      --secondary-color: #6366f1; /* Soft Indigo */
+      --accent-color: #f59e0b;
+      --danger-color: #ef4444;
+      --success-color: #10b981;
+      
+      --bg-body: #f8fafc; /* Very light cool gray */
+      --bg-surface: #ffffff;
+      
+      --text-main: #334155; /* Slate 700 - Softer than pure black */
+      --text-muted: #64748b; /* Slate 500 */
+      --border-color: #e2e8f0; /* Slate 200 */
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
     }
 
     body {
       font-family: "Inter", Arial, sans-serif;
       margin: 0;
       padding: 20px 10px;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: var(--bg-body);
+      color: var(--text-main);
       font-size: 14px;
       line-height: 1.5;
-      overflow-x: hidden; /* Iwas scrollbar pag nag slide */
+      overflow-x: hidden;
     }
 
-    /* SPLASH SCREEN INTRO - SMOOTH SLIDE UP */
+    /* SPLASH SCREEN - SMOOTH FADE OUT */
     #splash-screen {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-color: #1e293b; 
+      background-color: var(--bg-surface); 
       z-index: 9999;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #f8fafc;
-      transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); /* Smooth slide effect */
+      color: var(--text-main);
+      transition: opacity 0.8s ease, visibility 0.8s ease;
     }
 
-    /* Class na i-a-add ng JavaScript para mag-slide pataas */
-    .slide-up {
-      transform: translateY(-100%);
+    .fade-out {
+      opacity: 0;
+      visibility: hidden;
     }
 
     .splash-title {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      color: var(--primary-color);
       opacity: 0;
       animation: smoothFadeIn 1s ease-out 0.2s forwards;
     }
 
     .splash-subtitle {
       font-size: 14px;
-      letter-spacing: 3px;
-      color: #94a3b8;
+      letter-spacing: 2px;
+      color: var(--text-muted);
       opacity: 0;
       animation: smoothFadeIn 1s ease-out 0.6s forwards;
     }
 
     .splash-creator {
       margin-top: 40px;
-      font-size: 14px;
-      color: #64748b;
+      font-size: 12px;
+      color: #94a3b8;
       opacity: 0;
       animation: smoothFadeIn 1s ease-out 1s forwards;
     }
 
     .loader-ring {
       margin-top: 30px;
-      width: 35px; height: 35px;
-      border: 3px solid rgba(255, 255, 255, 0.05);
-      border-top-color: #38bdf8;
+      width: 40px; height: 40px;
+      border: 3px solid var(--border-color);
+      border-top-color: var(--primary-color);
       border-radius: 50%;
       opacity: 0;
       animation: spin 1s linear infinite, smoothFadeIn 0.5s ease-out 1.2s forwards;
@@ -95,170 +107,308 @@
 
     @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    /* MESSENGER APP LAYOUT */
+    /* MAIN APP LAYOUT */
     .messenger-container {
       display: flex; 
       flex-direction: column;
-      max-width: 900px;
+      max-width: 950px;
       margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
+      background: var(--bg-surface);
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: smoothFadeIn 0.8s ease-out 2.5s forwards; /* Fades in after splash */
     }
 
+    /* ANIMATED HEADER */
     .messenger-header {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      padding: 20px;
+      background: linear-gradient(-45deg, #eff6ff, #dbeafe, #e0e7ff, #eff6ff);
+      background-size: 400% 400%;
+      animation: gradientBG 8s ease infinite;
+      color: var(--text-main);
+      padding: 24px 20px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .messenger-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; margin: 0; }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .messenger-header h1 { 
+      font-size: 22px; 
+      font-weight: 700; 
+      letter-spacing: 0.5px; 
+      margin: 0; 
+      color: var(--primary-color);
+    }
 
     .animated-title {
-      font-weight: 400; font-size: 14px; margin: 8px 0 0; letter-spacing: 3px; color: #ffd700;
+      font-weight: 500; 
+      font-size: 13px; 
+      margin: 8px 0 0; 
+      letter-spacing: 2px; 
+      color: var(--secondary-color);
+      animation: pulseText 2.5s infinite ease-in-out;
     }
 
-    /* 🕒 Date-Time Widget */
+    @keyframes pulseText {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; text-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
+      100% { opacity: 0.8; }
+    }
+
+    /* 🕒 Date-Time Widget - Clean & Minimal */
     .date-time-container {
-      display: flex; justify-content: center; gap: 15px; padding: 15px;
-      background-color: #f8fafc; border-bottom: 1px solid var(--border-color);
+      display: flex; 
+      justify-content: center; 
+      gap: 20px; 
+      padding: 15px;
+      background-color: var(--bg-surface); 
+      border-bottom: 1px solid var(--border-color);
     }
-    .calendar {
-      background: linear-gradient(135deg, #2b5876, #4e4376); padding: 10px 20px;
-      border-radius: 8px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); min-width: 120px;
+
+    .calendar, .clock {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc; 
+      padding: 10px 20px;
+      border-radius: 12px; 
+      color: var(--text-main); 
+      border: 1px solid var(--border-color);
     }
-    .calendar .day-name { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
-    .calendar .date-number { font-size: 28px; font-weight: 700; margin: -2px 0; }
-    .calendar .month-year { font-size: 11px; opacity: 0.85; }
+
+    .calendar-icon, .clock-icon {
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+
+    .calendar-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .calendar .day-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600;}
+    .calendar .date-number { font-size: 16px; font-weight: 700; }
     
     .clock-wrapper { display: flex; align-items: center; }
     .clock {
-      background: #ffffff; color: var(--primary-color); padding: 12px 20px; border-radius: 8px;
-      font-weight: 700; font-size: 18px; letter-spacing: 1px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border-color); display: flex; align-items: center; gap: 8px;
+      font-weight: 600; 
+      font-size: 16px; 
+      letter-spacing: 0.5px; 
     }
 
-    .messenger-body { padding: 20px; }
+    .messenger-body { padding: 24px; }
 
     .form-section {
-      background: #fff; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);
-      margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      background: var(--bg-surface); 
+      padding: 0;
+      margin-bottom: 24px; 
     }
 
-    .form-row { display: flex; gap: 15px; flex-wrap: wrap; }
+    .form-row { display: flex; gap: 20px; flex-wrap: wrap; }
     .form-group { flex: 1; min-width: 200px; }
 
-    label { font-weight: 600; color: #4a5568; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; }
+    label { 
+      font-weight: 500; 
+      color: var(--text-main); 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin-bottom: 8px; 
+      font-size: 13px; 
+    }
+    label i { color: var(--text-muted); }
 
-    input[type="text"], input[type="date"], select, textarea {
-      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0;
-      border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; font-family: "Inter", sans-serif;
+    /* Soft Inputs */
+    input[type="text"], input[type="date"], input[type="number"], select, textarea {
+      width: 100%; 
+      padding: 12px 16px; 
+      border: 1px solid var(--border-color);
+      border-radius: 10px; 
+      font-size: 14px; 
+      transition: all 0.2s ease; 
+      box-sizing: border-box; 
+      font-family: "Inter", sans-serif;
+      background-color: #f8fafc;
+      color: var(--text-main);
     }
 
-    input:focus, select:focus, textarea:focus { border-color: var(--secondary-color); background: #f0f4f8; outline: none; }
+    input:hover, select:hover, textarea:hover {
+      border-color: #cbd5e0;
+    }
+
+    input:focus, select:focus, textarea:focus { 
+      border-color: var(--primary-color); 
+      background: #ffffff; 
+      outline: none; 
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
 
     /* RADIO BUTTONS & DYNAMIC INPUTS */
-    .transfer-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
+    .transfer-options { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 5px; }
     .transfer-options label {
-      flex: 1; min-width: 100px; font-size: 13px; padding: 10px;
-      background: #f8fafc; border-radius: 6px; border: 1px solid #cbd5e0;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+      flex: 1; min-width: 100px; font-size: 13px; padding: 12px;
+      background: #f8fafc; border-radius: 10px; border: 1px solid var(--border-color);
+      cursor: pointer; display: flex; align-items: center; justify-content: center; 
+      transition: all 0.2s ease; color: var(--text-main); font-weight: 500;
     }
-    .transfer-options label:hover { background: #e2e8f0; }
-    .transfer-options input[type="radio"]:checked + span { font-weight: bold; color: var(--primary-color); }
+    .transfer-options label:hover { background: #f1f5f9; border-color: #cbd5e0; }
+    .transfer-options input[type="radio"]:checked + span { font-weight: 600; color: var(--primary-color); }
     .transfer-options input[type="radio"] { margin-right: 8px; cursor: pointer; accent-color: var(--primary-color); }
+    
+    /* Highlight selected radio label */
+    .transfer-options label:has(input[type="radio"]:checked) {
+      background: #eff6ff;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-color);
+    }
 
     .dynamic-transfer-input {
-      margin-top: 10px;
-      padding-top: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
       border-top: 1px dashed var(--border-color);
       animation: smoothFadeIn 0.3s ease-out forwards;
     }
 
-    .input-scroll-container { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border-color); }
-
     /* TABLE */
-    table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 12px; }
-    th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 0; vertical-align: middle; }
-    th { background-color: #f1f5f9; color: #475569; text-transform: uppercase; font-size: 11px; font-weight: 700; text-align: center; padding: 12px 8px; }
-    td:last-child, th:last-child { border-right: none; }
+    .input-scroll-container { 
+      overflow-x: auto; 
+      border-radius: 12px; 
+      border: 1px solid var(--border-color); 
+      box-shadow: var(--shadow-sm);
+    }
+    
+    table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 13px; background: white;}
+    th, td { border-bottom: 1px solid var(--border-color); padding: 0; vertical-align: middle; }
+    
+    th { 
+      background-color: #f8fafc; 
+      color: var(--text-muted); 
+      font-size: 11px; 
+      font-weight: 600; 
+      text-align: left; 
+      padding: 14px 12px; 
+      letter-spacing: 0.5px;
+    }
+    th:not(:last-child), td:not(:last-child) { border-right: 1px solid #f1f5f9; }
     tr:last-child td { border-bottom: none; }
-    tr:nth-child(even) { background-color: #f8fafc; }
-
+    
+    /* Clean inputs inside table */
     td input, td select, td textarea {
-      width: 100%; height: 100%; border: 2px solid transparent; background: transparent;
-      resize: vertical; font-size: 12px; padding: 10px 8px; box-sizing: border-box; border-radius: 0;
+      width: 100%; height: 100%; border: none; background: transparent;
+      resize: vertical; font-size: 13px; padding: 14px 12px; box-sizing: border-box; border-radius: 0;
       -webkit-appearance: none; -moz-appearance: none; appearance: none;
     }
     
     td select {
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234a5568%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
       background-repeat: no-repeat, repeat;
-      background-position: right .7em top 50%, 0 0;
+      background-position: right 12px top 50%, 0 0;
       background-size: .65em auto, 100%;
-      padding-right: 20px;
+      padding-right: 30px;
       cursor: pointer;
     }
 
+    td input:hover, td select:hover, td textarea:hover {
+      background: #f8fafc;
+    }
+
     td input:focus, td select:focus, td textarea:focus {
-      background: #fff; border: 2px solid var(--secondary-color); border-radius: 4px; position: relative; z-index: 1;
+      background: #fff; 
+      box-shadow: inset 0 0 0 2px var(--primary-color);
+      border-radius: 4px; 
+      position: relative; 
+      z-index: 1;
     }
 
     .qty-requested { background-color: #fffbeb !important; font-weight: 600; color: #b45309; }
-    .total-cell { background-color: #f1f5f9 !important; font-weight: 600; color: #334155; text-align: center; }
+    .total-cell { background-color: #f1f5f9 !important; font-weight: 600; color: var(--text-main); }
 
-    .action-buttons { margin-top: 20px; display: flex; gap: 12px; justify-content: center; }
+    /* Buttons */
+    .action-buttons { margin-top: 24px; display: flex; gap: 16px; justify-content: flex-end; }
     
     button {
-      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-      color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 14px;
-      font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;
+      border: none; padding: 12px 24px; border-radius: 10px; font-size: 14px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px;
     }
 
-    button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-    .btn-add { background: linear-gradient(to right, #10b981, #059669); }
-    .btn-add:hover { background: linear-gradient(to right, #059669, #047857); }
+    .btn-add { 
+      background: #f1f5f9; 
+      color: var(--text-main); 
+      border: 1px solid var(--border-color);
+    }
+    .btn-add:hover { background: #e2e8f0; color: var(--primary-color); }
+
+    .btn-submit {
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+    }
+    .btn-submit:hover { 
+      background: var(--primary-hover); 
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+    }
 
     .remove-btn {
-      background: var(--danger-color); color: white; border: none; padding: 8px; border-radius: 4px;
+      background: transparent; color: var(--text-muted); border: none; padding: 8px; border-radius: 8px;
       cursor: pointer; width: 32px; height: 32px; margin: 0 auto; display: flex; align-items: center; justify-content: center;
     }
-    .remove-btn:hover { background-color: #c0392b; transform: scale(1.05); }
+    .remove-btn:hover { background-color: #fee2e2; color: var(--danger-color); }
 
-    .validation-error { color: var(--danger-color); font-size: 11px; margin-top: 4px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+    .validation-error { color: var(--danger-color); font-size: 12px; margin-top: 6px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
 
     /* HISTORY SECTION */
-    .history-section { margin-top: 30px; border-top: 2px dashed var(--border-color); padding-top: 20px; }
-    .history-header { font-size: 16px; font-weight: 700; color: var(--primary-color); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-    .history-table { min-width: 100%; border: 1px solid var(--border-color); }
-    .history-table th { background: #e2e8f0; font-size: 12px; }
-    .history-table td { padding: 10px; text-align: center; font-size: 12px; }
-    .empty-history { text-align: center; color: #94a3b8; font-style: italic; padding: 20px; }
-    .route-text { color: var(--primary-color); background: #f1f5f9; padding: 4px 10px; border-radius: 4px; display: inline-block; border: 1px solid #cbd5e0; }
+    .history-section { margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 30px; }
+    .history-header { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    
+    .history-table { min-width: 100%; background: white; }
+    .history-table th { background: #f8fafc; font-size: 12px; }
+    .history-table td { padding: 14px 12px; font-size: 13px; color: var(--text-main); }
+    .empty-history { text-align: center; color: var(--text-muted); font-style: italic; padding: 30px !important; }
+    
+    .route-badge { 
+      background: #eff6ff; color: var(--primary-hover); 
+      padding: 6px 12px; border-radius: 20px; 
+      display: inline-block; font-size: 12px; font-weight: 600; 
+    }
 
     .btn-delete-history {
-      background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color);
-      padding: 4px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; transition: 0.2s; margin: 0 auto;
+      background: transparent; color: var(--text-muted); 
+      padding: 6px; font-size: 13px; border-radius: 6px; cursor: pointer; transition: 0.2s; margin: 0 auto; display: block;
     }
-    .btn-delete-history:hover { background: var(--danger-color); color: white; }
+    .btn-delete-history:hover { background: #fee2e2; color: var(--danger-color); }
 
     /* ANIMATED FOOTER */
-    .messenger-footer { background-color: #0f172a; padding: 15px; text-align: center; font-size: 13px; font-weight: 600; color: #94a3b8; }
-    .creator-text { color: #38bdf8; }
+    .messenger-footer { 
+      background-color: #f8fafc; 
+      padding: 20px; 
+      text-align: center; 
+      font-size: 13px; 
+      color: var(--text-muted); 
+      border-top: 1px solid var(--border-color);
+    }
+    .creator-text { color: var(--primary-color); font-weight: 600; }
 
     ::-webkit-scrollbar { height: 8px; width: 8px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
     @media (max-width: 768px) {
-      .messenger-container { border-radius: 0; box-shadow: none; }
-      .form-row { flex-direction: column; gap: 10px; }
-      .date-time-container { flex-direction: column; align-items: center; }
-      .action-buttons { flex-direction: column; }
+      body { padding: 0; background: var(--bg-surface); }
+      .messenger-container { border-radius: 0; box-shadow: none; border: none; }
+      .form-row { flex-direction: column; gap: 12px; }
+      .date-time-container { flex-direction: column; align-items: center; gap: 12px;}
+      .action-buttons { flex-direction: column-reverse; }
       button { width: 100%; justify-content: center; }
       .history-table { min-width: 600px; }
     }
@@ -266,19 +416,20 @@
     @media print {
       body { background-color: #fff; }
       button, .action-buttons, .history-section, #splash-screen { display: none !important; }
-      .messenger-container { box-shadow: none; max-width: 100%; display: flex !important; }
+      .messenger-container { box-shadow: none; max-width: 100%; display: flex !important; border: none;}
       .date-time-container { border: none; }
       .animated-title { animation: none; color: #666; text-shadow: none; }
+      input, select, textarea { border: none !important; appearance: none; }
     }
   </style>
 </head>
 
 <body>
   <div id="splash-screen">
-    <div class="splash-title">STOCK TRANSFER REQUEST</div>
+    <div class="loader-ring"></div>
+    <div class="splash-title" style="margin-top: 20px;">STOCK TRANSFER</div>
     <div class="splash-subtitle">COMPLETESOLUTION PHARMACY</div>
     <div class="splash-creator">Created by gelocutler</div>
-    <div class="loader-ring"></div>
   </div>
 
   <div class="messenger-container" id="main-app">
@@ -289,12 +440,14 @@
     
     <div class="date-time-container">
       <div class="calendar">
-        <div class="day-name" id="dayName">Friday</div>
-        <div class="date-number" id="dateNumber">08</div>
-        <div class="month-year" id="monthYear">November 2025</div>
+        <i class="far fa-calendar-alt calendar-icon"></i>
+        <div class="calendar-details">
+          <div class="day-name" id="dayName">Friday</div>
+          <div class="date-number" id="dateText">Nov 08, 2025</div>
+        </div>
       </div>
       <div class="clock-wrapper">
-        <div class="clock" id="clock"><i class="far fa-clock"></i> 12:00:00 PM</div>
+        <div class="clock" id="clock"><i class="far fa-clock clock-icon"></i> <span>12:00:00 PM</span></div>
       </div>
     </div>
 
@@ -304,17 +457,17 @@
         <div class="form-section">
           <div class="form-row">
             <div class="form-group">
-              <label for="fromLocation"><i class="fas fa-map-marker-alt"></i> From Location:</label>
+              <label for="fromLocation"><i class="fas fa-map-marker-alt"></i> From Location</label>
               <input type="text" id="fromLocation" placeholder="Enter source location" required />
               <div id="fromLocationError" class="validation-error"></div>
             </div>
             <div class="form-group">
-              <label for="branch"><i class="fas fa-store"></i> To Branch:</label>
+              <label for="branch"><i class="fas fa-store"></i> To Branch</label>
               <input type="text" id="branch" placeholder="Enter destination branch" required />
               <div id="branchError" class="validation-error"></div>
             </div>
             <div class="form-group">
-              <label for="date"><i class="fas fa-calendar-alt"></i> Date of Request:</label>
+              <label for="date"><i class="fas fa-calendar-day"></i> Date of Request</label>
               <input type="date" id="date" required />
               <div id="dateError" class="validation-error"></div>
             </div>
@@ -322,7 +475,7 @@
         </div>
 
         <div class="form-section">
-          <label><i class="fas fa-truck-loading"></i> Mode of Transfer (Select One):</label>
+          <label><i class="fas fa-truck-loading"></i> Mode of Transfer</label>
           <div class="transfer-options">
             <label><input type="radio" name="transfer" value="Courier" onchange="toggleTransferInputs()" /> <span><i class="fas fa-box"></i> Courier</span></label>
             <label><input type="radio" name="transfer" value="Bus" onchange="toggleTransferInputs()" /> <span><i class="fas fa-bus"></i> Bus</span></label>
@@ -332,7 +485,7 @@
           <div id="transferError" class="validation-error"></div>
           
           <div id="courierDetails" class="dynamic-transfer-input" style="display: none;">
-            <label for="courierSelect"><i class="fas fa-truck"></i> Select Courier:</label>
+            <label for="courierSelect"><i class="fas fa-truck"></i> Select Courier</label>
             <select id="courierSelect" onchange="autoSaveDraft()">
               <option value="LBC">LBC</option>
               <option value="DHL">DHL</option>
@@ -341,12 +494,13 @@
           </div>
 
           <div id="othersDetails" class="dynamic-transfer-input" style="display: none;">
-            <label for="othersInput"><i class="fas fa-keyboard"></i> Specify Other Mode:</label>
+            <label for="othersInput"><i class="fas fa-keyboard"></i> Specify Other Mode</label>
             <input type="text" id="othersInput" placeholder="Type here..." oninput="autoSaveDraft()" />
           </div>
         </div>
 
-        <div class="form-section" style="padding: 0; overflow: hidden;">
+        <div class="form-section" style="padding: 0; overflow: hidden; margin-top: 20px;">
+          <label style="margin-bottom: 12px;"><i class="fas fa-boxes"></i> Item Details</label>
           <div class="input-scroll-container">
             <table id="stockTable">
               <colgroup>
@@ -370,7 +524,7 @@
                   <th>UOM</th>
                   <th>Total</th>
                   <th>Remarks</th>
-                  <th><i class="fas fa-cog"></i></th>
+                  <th style="text-align: center;"><i class="fas fa-cog"></i></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -380,30 +534,32 @@
 
         <div class="action-buttons">
           <button type="button" class="btn-add" onclick="addRow()"><i class="fas fa-plus"></i> Add Row</button>
-          <button type="button" onclick="validateAndSubmit()"><i class="fas fa-file-pdf"></i> Submit & Export PDF</button>
+          <button type="button" class="btn-submit" onclick="validateAndSubmit()"><i class="fas fa-file-pdf"></i> Submit & Export PDF</button>
         </div>
 
-        <div class="form-section" style="margin-top: 20px;">
-          <div class="form-group">
-            <label for="preparedBy"><i class="fas fa-user-edit"></i> Prepared by:</label>
-            <input type="text" id="preparedBy" placeholder="Name of preparer" required />
-            <div id="preparedByError" class="validation-error"></div>
+        <div class="form-section" style="margin-top: 30px;">
+          <div class="form-row">
+             <div class="form-group" style="max-width: 300px;">
+                <label for="preparedBy"><i class="fas fa-user-edit"></i> Prepared by</label>
+                <input type="text" id="preparedBy" placeholder="Name of preparer" required />
+                <div id="preparedByError" class="validation-error"></div>
+             </div>
           </div>
         </div>
 
       </form>
 
       <div class="history-section">
-        <div class="history-header"><i class="fas fa-history"></i> Recent Submissions History</div>
+        <div class="history-header"><i class="fas fa-history"></i> Recent Submissions</div>
         <div class="input-scroll-container">
           <table class="history-table">
             <thead>
               <tr>
-                <th>Date & Time Submitted</th>
-                <th>Route (LOCATION ➔ BRANCH)</th>
-                <th>Mode</th>
-                <th>Items Qty</th>
-                <th>Action</th>
+                <th style="text-align: left;">Date & Time Submitted</th>
+                <th style="text-align: left;">Route</th>
+                <th style="text-align: left;">Mode</th>
+                <th style="text-align: center;">Items Qty</th>
+                <th style="text-align: center;">Action</th>
               </tr>
             </thead>
             <tbody id="historyBody">
@@ -421,21 +577,21 @@
   </div>
 
   <script>
-    // SPLASH SCREEN LOGIC - SMOOTH SLIDE EFFECT
+    // SPLASH SCREEN LOGIC - SMOOTH FADE EFFECT
     window.addEventListener('load', () => {
       const splash = document.getElementById('splash-screen');
       
-      // Maghihintay ng 2.5 seconds bago mag-slide
+      // Wait for 2 seconds before fading out
       setTimeout(() => {
-        splash.classList.add('slide-up'); // I-a-activate ang transform translateY(-100%)
+        splash.classList.add('fade-out');
         
-        // Pagkatapos ng 1 second (duration ng slide), i-h-hide na completely at i-lo-load ang data
+        // Wait for CSS transition (0.8s) to finish before removing from DOM flow
         setTimeout(() => {
           splash.style.display = 'none';
           loadDraft();
           loadHistory();
-        }, 1000); 
-      }, 2500); 
+        }, 800); 
+      }, 2000); 
     });
 
     // DYNAMIC TRANSFER INPUTS TOGGLE
@@ -530,20 +686,20 @@
 
       Object.values(errors).forEach(error => error.innerHTML = "");
 
-      if (!document.getElementById("fromLocation").value.trim()) { errors.fromLocation.innerHTML = '<i class="fas fa-exclamation-circle"></i> From Location is required'; isValid = false; }
-      if (!document.getElementById("branch").value.trim()) { errors.branch.innerHTML = '<i class="fas fa-exclamation-circle"></i> To Branch is required'; isValid = false; }
-      if (!document.getElementById("date").value) { errors.date.innerHTML = '<i class="fas fa-exclamation-circle"></i> Date is required'; isValid = false; }
+      if (!document.getElementById("fromLocation").value.trim()) { errors.fromLocation.innerHTML = '<i class="fas fa-exclamation-circle"></i> Required'; isValid = false; }
+      if (!document.getElementById("branch").value.trim()) { errors.branch.innerHTML = '<i class="fas fa-exclamation-circle"></i> Required'; isValid = false; }
+      if (!document.getElementById("date").value) { errors.date.innerHTML = '<i class="fas fa-exclamation-circle"></i> Required'; isValid = false; }
       
       const selectedTransfer = document.querySelector('input[name="transfer"]:checked');
       if (!selectedTransfer) { 
-        errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select one mode of transfer'; 
+        errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Select transfer mode'; 
         isValid = false; 
       } else if (selectedTransfer.value === "Others" && !document.getElementById("othersInput").value.trim()) {
-        errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please specify the other transfer mode';
+        errors.transfer.innerHTML = '<i class="fas fa-exclamation-circle"></i> Specify other mode';
         isValid = false;
       }
 
-      if (!document.getElementById("preparedBy").value.trim()) { errors.preparedBy.innerHTML = '<i class="fas fa-exclamation-circle"></i> Prepared by is required'; isValid = false; }
+      if (!document.getElementById("preparedBy").value.trim()) { errors.preparedBy.innerHTML = '<i class="fas fa-exclamation-circle"></i> Required'; isValid = false; }
 
       const rows = document.querySelectorAll("#stockTable tbody tr");
       if (rows.length === 0) {
@@ -555,9 +711,9 @@
           inputs.forEach(input => {
             if (!input.value.trim()) {
               isValid = false;
-              input.style.border = "2px solid #e74c3c";
+              input.style.boxShadow = "inset 0 0 0 2px #ef4444";
             } else {
-              input.style.border = "2px solid transparent";
+              input.style.boxShadow = "none";
             }
           });
         });
@@ -668,9 +824,9 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${entry.timestamp}</td>
-          <td><strong class="route-text">${entry.route}</strong></td>
+          <td><span class="route-badge">${entry.route}</span></td>
           <td>${entry.transfer}</td>
-          <td>${entry.itemCount} items</td>
+          <td style="text-align: center;">${entry.itemCount} items</td>
           <td><button class="btn-delete-history" onclick="deleteHistory(${index})"><i class="fas fa-trash"></i></button></td>
         `;
         tbody.appendChild(tr);
@@ -701,6 +857,7 @@
       const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
 
       doc.setFontSize(18);
+      // REVERTED TO ORIGINAL PDF COLOR [30, 60, 114]
       doc.setTextColor(30, 60, 114);
       doc.text("COMPLETESOLUTION PHARMACY", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
       
@@ -728,6 +885,7 @@
         theme: "grid",
         styles: { fontSize: 10, cellPadding: 6 },
         columnStyles: { 0: { cellWidth: 120, fontStyle: 'bold' }, 1: { cellWidth: 280 } },
+        // REVERTED TO ORIGINAL PDF COLOR [30, 60, 114]
         headStyles: { fillColor: [30, 60, 114], textColor: 255 },
         margin: { left: startX, right: startX }
       });
@@ -757,6 +915,7 @@
         theme: "grid",
         styles: { fontSize: 9, cellPadding: 5 },
         columnStyles: columnStyles,
+        // REVERTED TO ORIGINAL PDF COLOR [30, 60, 114]
         headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
         margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2 },
         didParseCell: function(cellData) {
@@ -785,11 +944,10 @@
     function updateDateTime() {
       const now = new Date();
       const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-      const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     
       document.getElementById("dayName").textContent = days[now.getDay()];
-      document.getElementById("dateNumber").textContent = String(now.getDate()).padStart(2, "0");
-      document.getElementById("monthYear").textContent = `${months[now.getMonth()]} ${now.getFullYear()}`;
+      document.getElementById("dateText").textContent = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2, "0")}, ${now.getFullYear()}`;
     
       let hours = now.getHours();
       const minutes = now.getMinutes();
@@ -797,8 +955,8 @@
       const ampm = hours >= 12 ? "PM" : "AM";
       hours = hours % 12 || 12;
     
-      document.getElementById("clock").innerHTML = 
-        `<i class="far fa-clock"></i> ${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")} ${ampm}`;
+      document.getElementById("clock").querySelector("span").textContent = 
+        `${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")} ${ampm}`;
     }
     
     setInterval(updateDateTime, 1000);
