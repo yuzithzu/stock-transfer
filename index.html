@@ -381,11 +381,16 @@
       display: inline-block; font-size: 12px; font-weight: 600; 
     }
 
-    .btn-delete-history {
-      background: transparent; color: var(--text-muted); 
-      padding: 6px; font-size: 13px; border-radius: 6px; cursor: pointer; transition: 0.2s; margin: 0 auto; display: block;
+    /* HISTORY ACTION BUTTONS */
+    .history-actions { display: flex; gap: 6px; justify-content: center; align-items: center; }
+    .btn-delete-history, .btn-download-history {
+      background: transparent; border: none; padding: 8px; font-size: 13px; 
+      border-radius: 6px; cursor: pointer; transition: 0.2s;
     }
+    .btn-delete-history { color: var(--text-muted); }
     .btn-delete-history:hover { background: #fee2e2; color: var(--danger-color); }
+    .btn-download-history { color: var(--primary-color); }
+    .btn-download-history:hover { background: #eff6ff; color: var(--primary-hover); }
 
     /* ANIMATED FOOTER */
     .messenger-footer { 
@@ -559,7 +564,7 @@
                 <th style="text-align: left;">Route</th>
                 <th style="text-align: left;">Mode</th>
                 <th style="text-align: center;">Items Qty</th>
-                <th style="text-align: center;">Action</th>
+                <th style="text-align: center;">Actions</th>
               </tr>
             </thead>
             <tbody id="historyBody">
@@ -802,7 +807,8 @@
         timestamp: new Date().toLocaleString(),
         route: `${data.fromLocation.toUpperCase()} ➔ ${data.branch.toUpperCase()}`,
         transfer: data.transferFinal,
-        itemCount: data.rows.length
+        itemCount: data.rows.length,
+        formData: data // SAVING THE FULL FORM DATA FOR RE-DOWNLOAD
       };
       
       history.unshift(newEntry);
@@ -827,7 +833,10 @@
           <td><span class="route-badge">${entry.route}</span></td>
           <td>${entry.transfer}</td>
           <td style="text-align: center;">${entry.itemCount} items</td>
-          <td><button class="btn-delete-history" onclick="deleteHistory(${index})"><i class="fas fa-trash"></i></button></td>
+          <td class="history-actions">
+            <button class="btn-download-history" title="Download PDF" onclick="reDownloadPDF(${index})"><i class="fas fa-download"></i></button>
+            <button class="btn-delete-history" title="Delete Record" onclick="deleteHistory(${index})"><i class="fas fa-trash"></i></button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -842,22 +851,33 @@
       }
     }
 
+    function reDownloadPDF(index) {
+      let history = JSON.parse(localStorage.getItem('stockHistory') || '[]');
+      let entry = history[index];
+      
+      if (entry && entry.formData) {
+        // True as second parameter skips the success alert message
+        generatePDF(entry.formData, true);
+      } else {
+        alert("Sorry, the form data for this old submission was not saved. Unable to re-download.");
+      }
+    }
+
     // PDF EXPORT
     function validateAndSubmit() {
       if (validateForm()) {
         const data = collectData();
-        generatePDF(data);
+        generatePDF(data, false);
         saveToHistory(data);
         clearDraftForm();
       }
     }
 
-    function generatePDF(data) {
+    function generatePDF(data, isReDownload = false) {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
 
       doc.setFontSize(18);
-      // REVERTED TO ORIGINAL PDF COLOR [30, 60, 114]
       doc.setTextColor(30, 60, 114);
       doc.text("COMPLETESOLUTION PHARMACY", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
       
@@ -885,7 +905,6 @@
         theme: "grid",
         styles: { fontSize: 10, cellPadding: 6 },
         columnStyles: { 0: { cellWidth: 120, fontStyle: 'bold' }, 1: { cellWidth: 280 } },
-        // REVERTED TO ORIGINAL PDF COLOR [30, 60, 114]
         headStyles: { fillColor: [30, 60, 114], textColor: 255 },
         margin: { left: startX, right: startX }
       });
@@ -915,7 +934,6 @@
         theme: "grid",
         styles: { fontSize: 9, cellPadding: 5 },
         columnStyles: columnStyles,
-        // REVERTED TO ORIGINAL PDF COLOR [30, 60, 114]
         headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
         margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2 },
         didParseCell: function(cellData) {
@@ -937,7 +955,11 @@
       doc.text("System Created by gelocutler", pageWidth / 2, doc.lastAutoTable.finalY + 60, { align: "center" });
 
       doc.save(`StockTransfer_${data.fromLocation.replace(/\s+/g, '_')}_to_${data.branch.replace(/\s+/g, '_')}_${data.date}.pdf`);
-      alert("✅ Submission successful! PDF generated and saved to history.");
+      
+      // I-alert lang kapag nag-submit, hindi kapag nag re-download
+      if (!isReDownload) {
+        alert("✅ Submission successful! PDF generated and saved to history.");
+      }
     }
     
     // CLOCK & CALENDAR
