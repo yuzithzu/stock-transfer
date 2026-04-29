@@ -976,17 +976,16 @@
     function generatePDF(data, isReDownload = false) {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
 
-      // Note: Ang jsPDF ay palaging naka-puti ang background by default
       doc.setFontSize(18);
       doc.setTextColor(30, 60, 114);
-      doc.text("COMPLETESOLUTION PHARMACY", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
+      doc.text("COMPLETESOLUTION PHARMACY", pageWidth / 2, 40, { align: "center" });
       
       doc.setFontSize(14);
       doc.setTextColor(100, 100, 100);
-      doc.text("STOCK TRANSFER REQUEST", doc.internal.pageSize.getWidth() / 2, 60, { align: "center" });
-      
-      const pageWidth = doc.internal.pageSize.getWidth();
+      doc.text("STOCK TRANSFER REQUEST", pageWidth / 2, 60, { align: "center" });
       
       const detailsHeaders = ["Field", "Details"];
       const detailsRows = [
@@ -1036,24 +1035,42 @@
         styles: { fontSize: 9, cellPadding: 5 },
         columnStyles: columnStyles,
         headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
-        margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2 },
+        // IMPORTANT: Added bottom margin to prevent tables from bleeding off the page
+        margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2, bottom: 60 },
         didParseCell: function(cellData) {
           if(cellData.column.index === 4 && cellData.section === 'body') {
             cellData.cell.styles.fillColor = [255, 251, 235];
             cellData.cell.styles.textColor = [180, 83, 9];
             cellData.cell.styles.fontStyle = "bold";
           }
+        },
+        // IMPORTANT: Hook to add page numbers on every created page
+        didDrawPage: function(data) {
+          const str = 'Page ' + doc.internal.getNumberOfPages();
+          doc.setFontSize(8);
+          doc.setTextColor(150, 150, 150);
+          doc.text(str, pageWidth - 40, pageHeight - 20, { align: 'right' });
         }
       });
+
+      // IMPORTANT: Space Check before adding the footer texts
+      let finalY = doc.lastAutoTable.finalY;
+      
+      // If the final Y position + 80 is greater than the total page height, 
+      // there is no space left for the signatures. Make a new page.
+      if (finalY + 80 > pageHeight) {
+        doc.addPage();
+        finalY = 40; // Reset Y position to top part for the next page
+      }
 
       const timestamp = `PDF Generated on: ${new Date().toLocaleString()}`;
       doc.setFontSize(10);
       doc.setTextColor(0, 0, 0);
-      doc.text(`Prepared by: ${data.preparedBy}`, 40, doc.lastAutoTable.finalY + 40);
-      doc.text(timestamp, pageWidth - 40, doc.lastAutoTable.finalY + 40, { align: "right" });
+      doc.text(`Prepared by: ${data.preparedBy}`, 40, finalY + 40);
+      doc.text(timestamp, pageWidth - 40, finalY + 40, { align: "right" });
       
       doc.setTextColor(150, 150, 150);
-      doc.text("System Created by gelocutler", pageWidth / 2, doc.lastAutoTable.finalY + 60, { align: "center" });
+      doc.text("System Created by gelocutler", pageWidth / 2, finalY + 60, { align: "center" });
 
       doc.save(`StockTransfer_${data.fromLocation.replace(/\s+/g, '_')}_to_${data.branch.replace(/\s+/g, '_')}_${data.date}.pdf`);
       
