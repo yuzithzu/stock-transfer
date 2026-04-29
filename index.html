@@ -144,7 +144,7 @@
     .messenger-container {
       display: flex; 
       flex-direction: column;
-      max-width: 1050px; 
+      max-width: 1100px; 
       margin: 0 auto;
       background: var(--bg-surface);
       border-radius: 16px;
@@ -388,6 +388,14 @@
       text-align: right;
     }
 
+    .row-number {
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-muted);
+      background-color: var(--bg-body);
+      font-size: 12px;
+    }
+
     /* Light Theme Highlight Cells */
     [data-theme="light"] .qty-requested { background-color: #fffbeb !important; font-weight: 600; color: #b45309; }
     [data-theme="light"] .total-cell { background-color: #f1f5f9 !important; font-weight: 600; color: var(--text-main); }
@@ -469,7 +477,6 @@
     }
 
     @media print {
-      /* Pilitin na white background kapag nag-print directly via browser (Ctrl+P) */
       :root {
         --bg-body: #ffffff;
         --bg-surface: #ffffff;
@@ -482,7 +489,7 @@
       .date-time-container { border: none; }
       .animated-title { animation: none; color: #666; text-shadow: none; }
       input, select, textarea { border: none !important; appearance: none; color: #000; }
-      th { background-color: #f0f0f0; color: #000; }
+      th, .row-number { background-color: #f0f0f0 !important; color: #000 !important; }
     }
   </style>
 </head>
@@ -574,18 +581,20 @@
           <div class="input-scroll-container">
             <table id="stockTable">
               <colgroup>
+                <col style="width: 3%;">
                 <col style="width: 10%;"> 
-                <col style="width: 20%;"> 
-                <col style="width: 11%;"> 
-                <col style="width: 14%;"> 
-                <col style="width: 11%;"> 
-                <col style="width: 9%;">  
-                <col style="width: 11%;"> 
+                <col style="width: 19%;"> 
                 <col style="width: 10%;"> 
+                <col style="width: 13%;"> 
+                <col style="width: 10%;"> 
+                <col style="width: 8%;">  
+                <col style="width: 10%;"> 
+                <col style="width: 13%;"> 
                 <col style="width: 4%;">  
               </colgroup>
               <thead>
                 <tr>
+                  <th style="text-align: center;">#</th>
                   <th>Stock Code</th>
                   <th>Product Description</th>
                   <th>Qty Onhand</th>
@@ -668,13 +677,10 @@
     function updateThemeIcon(theme) {
       const icon = document.querySelector('#themeToggle i');
       if (icon) {
-        // Kapag dark theme, araw ang icon (pang-balik sa light)
-        // Kapag light theme, buwan ang icon (pang-lipat sa dark)
         icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
       }
     }
 
-    // Call initTheme immediately to avoid flash of wrong colors
     initTheme();
 
     // ==========================================
@@ -722,6 +728,16 @@
       return parseInt(num, 10).toLocaleString('en-US');
     }
 
+    function updateRowNumbers() {
+      const rows = document.querySelectorAll("#stockTable tbody tr");
+      rows.forEach((row, index) => {
+        const numCell = row.querySelector('.row-number');
+        if (numCell) {
+          numCell.textContent = index + 1;
+        }
+      });
+    }
+
     function addRow(data = {}) {
       const tbody = document.querySelector("#stockTable tbody");
       const row = document.createElement("tr");
@@ -735,6 +751,7 @@
       uomSelectHTML += `</select>`;
 
       row.innerHTML = `
+        <td class="row-number"></td>
         <td><input type="text" placeholder="Code" value="${data.stock_code || ""}" required></td>
         <td><input type="text" placeholder="Description" value="${data.product_description || ""}" required></td>
         <td><input type="text" placeholder="0" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
@@ -748,6 +765,8 @@
         </td>
       `;
       tbody.appendChild(row);
+      
+      updateRowNumbers(); // Update numbering after adding
       
       const onhandInput = row.querySelector('.qty-onhand');
       const requestedInput = row.querySelector('.qty-requested');
@@ -781,6 +800,7 @@
 
     function removeRow(btn) {
       btn.closest("tr").remove();
+      updateRowNumbers(); // Update numbering after removing
       autoSaveDraft();
     }
 
@@ -843,14 +863,15 @@
         transferFinal: getTransferValue(),
         rows: Array.from(document.querySelectorAll("#stockTable tbody tr")).map((tr) => {
           return {
-            stock_code: tr.querySelector('td:nth-child(1) input').value,
-            product_description: tr.querySelector('td:nth-child(2) input').value,
-            qty_onhand: tr.querySelector('td:nth-child(3) input').value, 
-            location: tr.querySelector('td:nth-child(4) input').value,
-            qty_requested: tr.querySelector('td:nth-child(5) input').value, 
-            uom: tr.querySelector('td:nth-child(6) select').value,
-            total: tr.querySelector('td:nth-child(7) input').value, 
-            remarks: tr.querySelector('td:nth-child(8) textarea').value,
+            // Note: In-adjust ang nth-child dahil nandiyan na si column 1 (row-number)
+            stock_code: tr.querySelector('td:nth-child(2) input').value,
+            product_description: tr.querySelector('td:nth-child(3) input').value,
+            qty_onhand: tr.querySelector('td:nth-child(4) input').value, 
+            location: tr.querySelector('td:nth-child(5) input').value,
+            qty_requested: tr.querySelector('td:nth-child(6) input').value, 
+            uom: tr.querySelector('td:nth-child(7) select').value,
+            total: tr.querySelector('td:nth-child(8) input').value, 
+            remarks: tr.querySelector('td:nth-child(9) textarea').value,
           };
         }),
       };
@@ -1009,13 +1030,17 @@
         margin: { left: startX, right: startX }
       });
       
-      const headers = ["Stock Code", "Product Description", "Qty Onhand", "Location (Bin)", "Qty Req", "UOM", "Total", "Remarks"];
-      const rows = data.rows.map((r) => [
-        r.stock_code, r.product_description, r.qty_onhand, r.location, r.qty_requested, r.uom, r.total,
+      // Idinagdag ang "#" sa Headers
+      const headers = ["#", "Stock Code", "Product Description", "Qty Onhand", "Location (Bin)", "Qty Req", "UOM", "Total", "Remarks"];
+      
+      // Idinagdag ang index + 1 para sa numbering ng bawat item
+      const rows = data.rows.map((r, index) => [
+        index + 1, r.stock_code, r.product_description, r.qty_onhand, r.location, r.qty_requested, r.uom, r.total,
         r.remarks ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim() : ""
       ]);
 
-      const colWidths = {0:60, 1:180, 2:60, 3:70, 4:70, 5:40, 6:50, 7:160};
+      // Na-adjust ang colWidths para sa idinagdag na number column (index 0)
+      const colWidths = {0:20, 1:60, 2:160, 3:60, 4:70, 5:60, 6:40, 7:50, 8:150};
       const finalColWidths = {};
       const maxUsableWidth = pageWidth - 80;
       const totalDesiredWidth = Object.values(colWidths).reduce((a,b)=>a+b,0);
@@ -1024,7 +1049,8 @@
 
       const columnStyles = {};
       for(const idx in finalColWidths){
-        columnStyles[idx] = {cellWidth: finalColWidths[idx], halign: (idx>=2 && idx<=6) ? "center" : "left"};
+        // I-center alignment ang '#', 'Qty Onhand', 'Location', 'Qty Req', 'UOM', at 'Total'
+        columnStyles[idx] = {cellWidth: finalColWidths[idx], halign: (idx == 0 || (idx >= 3 && idx <= 7)) ? "center" : "left"};
       }
 
       doc.autoTable({
@@ -1035,16 +1061,15 @@
         styles: { fontSize: 9, cellPadding: 5 },
         columnStyles: columnStyles,
         headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
-        // IMPORTANT: Added bottom margin to prevent tables from bleeding off the page
         margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2, bottom: 60 },
         didParseCell: function(cellData) {
-          if(cellData.column.index === 4 && cellData.section === 'body') {
+          // In-update ang index patungong 5 para sa pagkulay ng 'Qty Req' dahil nadagdag yung numbering
+          if(cellData.column.index === 5 && cellData.section === 'body') {
             cellData.cell.styles.fillColor = [255, 251, 235];
             cellData.cell.styles.textColor = [180, 83, 9];
             cellData.cell.styles.fontStyle = "bold";
           }
         },
-        // IMPORTANT: Hook to add page numbers on every created page
         didDrawPage: function(data) {
           const str = 'Page ' + doc.internal.getNumberOfPages();
           doc.setFontSize(8);
@@ -1053,14 +1078,11 @@
         }
       });
 
-      // IMPORTANT: Space Check before adding the footer texts
       let finalY = doc.lastAutoTable.finalY;
       
-      // If the final Y position + 80 is greater than the total page height, 
-      // there is no space left for the signatures. Make a new page.
       if (finalY + 80 > pageHeight) {
         doc.addPage();
-        finalY = 40; // Reset Y position to top part for the next page
+        finalY = 40; 
       }
 
       const timestamp = `PDF Generated on: ${new Date().toLocaleString()}`;
