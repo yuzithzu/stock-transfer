@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>COMPLETESOLUTION PHARMACY - Stock Transfer</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -295,7 +295,6 @@
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
 
-    /* Select arrow color adjustment for dark mode */
     [data-theme="dark"] select {
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
     }
@@ -316,18 +315,11 @@
       box-shadow: 0 0 0 1px var(--primary-color);
     }
 
-    /* Dark mode specific highlight for transfer options */
-    [data-theme="dark"] .transfer-options label:has(input[type="radio"]:checked) {
-      background: rgba(59, 130, 246, 0.1);
-    }
-    [data-theme="light"] .transfer-options label:has(input[type="radio"]:checked) {
-      background: #eff6ff;
-    }
+    [data-theme="dark"] .transfer-options label:has(input[type="radio"]:checked) { background: rgba(59, 130, 246, 0.1); }
+    [data-theme="light"] .transfer-options label:has(input[type="radio"]:checked) { background: #eff6ff; }
 
     .dynamic-transfer-input {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px dashed var(--border-color);
+      margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-color);
       animation: smoothFadeIn 0.3s ease-out forwards;
     }
 
@@ -339,17 +331,12 @@
       box-shadow: var(--shadow-sm);
     }
     
-    table { width: 100%; border-collapse: collapse; min-width: 1100px; font-size: 13px; background: var(--bg-surface); transition: background-color 0.3s;}
+    table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 13px; background: var(--bg-surface); transition: background-color 0.3s;}
     th, td { border-bottom: 1px solid var(--border-color); padding: 0; vertical-align: middle; transition: border-color 0.3s;}
     
     th { 
-      background-color: var(--bg-body); 
-      color: var(--text-muted); 
-      font-size: 11px; 
-      font-weight: 600; 
-      text-align: left; 
-      padding: 14px 12px; 
-      letter-spacing: 0.5px;
+      background-color: var(--bg-body); color: var(--text-muted); font-size: 11px; 
+      font-weight: 600; text-align: left; padding: 14px 12px; letter-spacing: 0.5px;
       transition: background-color 0.3s, color 0.3s;
     }
     th:not(:last-child), td:not(:last-child) { border-right: 1px solid var(--border-color); }
@@ -358,19 +345,15 @@
     td input, td select, td textarea {
       width: 100%; height: 100%; border: none; background: transparent;
       resize: vertical; font-size: 13px; padding: 14px 12px; box-sizing: border-box; border-radius: 0;
-      -webkit-appearance: none; -moz-appearance: none; appearance: none;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none; color: var(--text-main);
     }
     
     td select {
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat, repeat;
-      background-position: right 12px top 50%, 0 0;
-      background-size: .65em auto, 100%;
-      padding-right: 30px;
-      cursor: pointer;
+      background-repeat: no-repeat, repeat; background-position: right 12px top 50%, 0 0;
+      background-size: .65em auto, 100%; padding-right: 25px; cursor: pointer; text-align-last: center;
     }
-    
-    /* Dark mode adjustments for table inner selects */
+
     [data-theme="dark"] td select {
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
     }
@@ -379,21 +362,14 @@
     td input:focus, td select:focus, td textarea:focus {
       background: var(--bg-surface); 
       box-shadow: inset 0 0 0 2px var(--primary-color);
-      border-radius: 4px; 
-      position: relative; 
-      z-index: 1;
+      border-radius: 4px; position: relative; z-index: 1;
     }
 
-    td input.qty-onhand, td input.qty-requested, td input.total-cell {
-      text-align: right;
-    }
+    td input.qty-onhand, td input.qty-requested, td input.total-cell { text-align: center; }
 
     .row-number {
-      text-align: center;
-      font-weight: 600;
-      color: var(--text-muted);
-      background-color: var(--bg-body);
-      font-size: 12px;
+      text-align: center; font-weight: 600; color: var(--text-muted);
+      background-color: var(--bg-body); font-size: 12px;
     }
 
     /* Light Theme Highlight Cells */
@@ -403,6 +379,22 @@
     /* Dark Theme Highlight Cells */
     [data-theme="dark"] .qty-requested { background-color: #422006 !important; font-weight: 600; color: #fcd34d; }
     [data-theme="dark"] .total-cell { background-color: #334155 !important; font-weight: 600; color: #f1f5f9; }
+
+    /* FOOTER ROW FOR TOTAL REQUEST (UPDATED TEXT & ITEMS) */
+    tfoot tr { background-color: var(--bg-body); border-top: 2px solid var(--border-color); }
+    tfoot td { padding: 18px 12px; color: var(--text-main); }
+    .total-label-cell { text-align: right; font-weight: 800; font-size: 15px; letter-spacing: 1px; }
+    .total-value-cell { 
+      text-align: center; 
+      font-weight: 800; 
+      font-size: 22px; 
+      background: rgba(59, 130, 246, 0.1); 
+      color: var(--primary-color) !important; 
+    }
+    [data-theme="dark"] .total-value-cell {
+      background: rgba(96, 165, 250, 0.15);
+      color: #93c5fd !important;
+    }
 
     .action-buttons { margin-top: 24px; display: flex; gap: 16px; justify-content: flex-end; }
     button {
@@ -450,15 +442,61 @@
     .btn-download-history:hover { background: rgba(59, 130, 246, 0.1); color: var(--primary-hover); }
 
     .messenger-footer { 
-      background-color: var(--bg-body); 
-      padding: 20px; 
-      text-align: center; 
-      font-size: 13px; 
-      color: var(--text-muted); 
-      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-body); padding: 20px; text-align: center; 
+      font-size: 13px; color: var(--text-muted); border-top: 1px solid var(--border-color);
       transition: background-color 0.3s, border-color 0.3s;
     }
     .creator-text { color: var(--primary-color); font-weight: 600; }
+
+    /* MODAL FOR MANAGE UOM */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    .modal-content {
+      background: var(--bg-surface); border-radius: 12px; width: 400px;
+      max-width: 90%; box-shadow: var(--shadow-lg); overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+      background: var(--bg-body);
+    }
+    .modal-header h3 { margin: 0; font-size: 16px; color: var(--text-main); }
+    .modal-header button {
+      background: transparent; border: none; font-size: 18px;
+      color: var(--text-muted); cursor: pointer; padding: 0; width: auto;
+    }
+    .modal-header button:hover { color: var(--danger-color); }
+    .modal-body { padding: 20px; }
+    .uom-add-group { display: flex; gap: 10px; margin-bottom: 20px; }
+    .uom-add-group input { flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);}
+    .uom-add-group button { padding: 10px 16px; font-size: 13px; border-radius: 8px; background: var(--primary-color); color: white;}
+    .uom-add-group button:hover { background: var(--primary-hover); }
+    .uom-list { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px;}
+    .uom-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; border-bottom: 1px solid var(--border-color);
+      color: var(--text-main); font-size: 14px;
+    }
+    .uom-list li:last-child { border-bottom: none; }
+    .uom-list button {
+      background: rgba(239, 68, 68, 0.1); color: var(--danger-color);
+      border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer;
+      width: auto; font-size: 12px;
+    }
+    .uom-list button:hover { background: var(--danger-color); color: #fff; }
+
+    .btn-manage-uom {
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-main); padding: 6px 12px; border-radius: 6px;
+      font-size: 12px; cursor: pointer; float: right; margin-top: -5px; height: auto;
+    }
+    .btn-manage-uom:hover { border-color: var(--primary-color); color: var(--primary-color); }
+    .item-label-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 
     ::-webkit-scrollbar { height: 8px; width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -477,19 +515,15 @@
     }
 
     @media print {
-      :root {
-        --bg-body: #ffffff;
-        --bg-surface: #ffffff;
-        --text-main: #000000;
-        --border-color: #dddddd;
-      }
+      :root { --bg-body: #ffffff; --bg-surface: #ffffff; --text-main: #000000; --border-color: #dddddd; }
       body { background-color: #fff; color: #000; }
-      button, .action-buttons, .history-section, #splash-screen, .theme-btn { display: none !important; }
+      button, .action-buttons, .history-section, #splash-screen, .theme-btn, .btn-manage-uom { display: none !important; }
       .messenger-container { box-shadow: none; max-width: 100%; display: flex !important; border: none;}
       .date-time-container { border: none; }
       .animated-title { animation: none; color: #666; text-shadow: none; }
       input, select, textarea { border: none !important; appearance: none; color: #000; }
       th, .row-number { background-color: #f0f0f0 !important; color: #000 !important; }
+      tfoot tr { background-color: #fff !important;}
     }
   </style>
 </head>
@@ -577,36 +611,49 @@
         </div>
 
         <div class="form-section" style="padding: 0; overflow: hidden; margin-top: 20px;">
-          <label style="margin-bottom: 12px;"><i class="fas fa-boxes"></i> Item Details</label>
+          <div class="item-label-container">
+            <label style="margin-bottom: 0;"><i class="fas fa-boxes"></i> Item Details</label>
+            <button type="button" class="btn-manage-uom" onclick="openUomModal()"><i class="fas fa-cog"></i> Manage UOM</button>
+          </div>
+          
           <div class="input-scroll-container">
             <table id="stockTable">
+              <!-- Exact proportionate columns for HTML view to match PDF -->
               <colgroup>
-                <col style="width: 3%;">
-                <col style="width: 10%;"> 
-                <col style="width: 19%;"> 
-                <col style="width: 10%;"> 
-                <col style="width: 13%;"> 
-                <col style="width: 10%;"> 
-                <col style="width: 8%;">  
-                <col style="width: 10%;"> 
-                <col style="width: 13%;"> 
-                <col style="width: 4%;">  
+                <col style="width: 4%;">  <!-- # -->
+                <col style="width: 10%;"> <!-- Stock Code -->
+                <col style="width: 24%;"> <!-- Product Description -->
+                <col style="width: 9%;">  <!-- Qty Onhand -->
+                <col style="width: 10%;"> <!-- Location (Bin) -->
+                <col style="width: 9%;">  <!-- Qty Req -->
+                <col style="width: 8%;">  <!-- UOM -->
+                <col style="width: 9%;">  <!-- Total -->
+                <col style="width: 13%;"> <!-- Remarks -->
+                <col style="width: 4%;">  <!-- Actions -->
               </colgroup>
               <thead>
                 <tr>
                   <th style="text-align: center;">#</th>
                   <th>Stock Code</th>
                   <th>Product Description</th>
-                  <th>Qty Onhand</th>
-                  <th>Location (Bin)</th>
-                  <th>Qty Req</th>
-                  <th>UOM</th>
-                  <th>Total</th>
+                  <th style="text-align: center;">Qty Onhand</th>
+                  <th style="text-align: center;">Location (Bin)</th>
+                  <th style="text-align: center;">Qty Req</th>
+                  <th style="text-align: center;">UOM</th>
+                  <th style="text-align: center;">Total</th>
                   <th>Remarks</th>
                   <th style="text-align: center;"><i class="fas fa-cog"></i></th>
                 </tr>
               </thead>
               <tbody></tbody>
+              <tfoot>
+                <tr>
+                  <!-- LABEL CELL -->
+                  <td colspan="7" class="total-label-cell">TOTAL REQUESTED PRODUCTS:</td>
+                  <!-- VALUE CELL WITH "ITEMS" TEXT -->
+                  <td colspan="3" id="totalRequestLabel" class="total-value-cell">0 ITEMS</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
@@ -655,6 +702,23 @@
     </div>
   </div>
 
+  <div id="uomModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-list-ul"></i> Manage UOM</h3>
+        <button type="button" onclick="closeUomModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="uom-add-group">
+          <input type="text" id="newUomInput" placeholder="Enter new UOM (e.g. BOTTLES)">
+          <button type="button" onclick="addNewUom()">Add</button>
+        </div>
+        <ul id="uomListContainer" class="uom-list">
+          </ul>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==========================================
     // THEME LOGIC
@@ -682,6 +746,85 @@
     }
 
     initTheme();
+
+    // ==========================================
+    // UOM MANAGEMENT LOGIC
+    // ==========================================
+    let globalUomOptions = JSON.parse(localStorage.getItem('uomList')) || ["TABS", "CAPS", "BOXS", "PFS", "VIALS", "AMPS"];
+
+    function saveUomList() {
+      localStorage.setItem('uomList', JSON.stringify(globalUomOptions));
+    }
+
+    function openUomModal() {
+      document.getElementById('uomModal').style.display = 'flex';
+      renderUomModalList();
+    }
+
+    function closeUomModal() {
+      document.getElementById('uomModal').style.display = 'none';
+    }
+
+    function renderUomModalList() {
+      const container = document.getElementById('uomListContainer');
+      container.innerHTML = '';
+      globalUomOptions.forEach((uom, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${uom}</span>
+          <button type="button" onclick="deleteUom(${index})" title="Delete UOM"><i class="fas fa-trash-alt"></i></button>
+        `;
+        container.appendChild(li);
+      });
+    }
+
+    function addNewUom() {
+      const input = document.getElementById('newUomInput');
+      const val = input.value.trim().toUpperCase();
+      if (val && !globalUomOptions.includes(val)) {
+        globalUomOptions.push(val);
+        saveUomList();
+        input.value = '';
+        renderUomModalList();
+        updateAllUomDropdowns();
+      } else if (globalUomOptions.includes(val)) {
+        alert("This UOM already exists.");
+      }
+    }
+
+    function deleteUom(index) {
+      if (confirm('Are you sure you want to delete this UOM?')) {
+        globalUomOptions.splice(index, 1);
+        saveUomList();
+        renderUomModalList();
+        updateAllUomDropdowns();
+      }
+    }
+
+    function updateAllUomDropdowns() {
+      const selects = document.querySelectorAll('.uom-select');
+      selects.forEach(select => {
+        const currentVal = select.value;
+        select.innerHTML = '';
+        globalUomOptions.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt;
+          option.textContent = opt;
+          if(opt === currentVal) option.selected = true;
+          select.appendChild(option);
+        });
+        
+        // If currentVal was deleted, keep it showing so we don't break existing draft data
+        if(currentVal && !globalUomOptions.includes(currentVal)) {
+          const option = document.createElement('option');
+          option.value = currentVal;
+          option.textContent = currentVal + " (Removed)";
+          option.selected = true;
+          select.appendChild(option);
+        }
+      });
+      autoSaveDraft();
+    }
 
     // ==========================================
     // MAIN SCRIPT
@@ -738,16 +881,32 @@
       });
     }
 
+    function updateTotalRequest() {
+      const reqInputs = document.querySelectorAll('.qty-requested');
+      let totalReq = 0;
+      reqInputs.forEach(input => {
+        const val = parseInt(input.value.replace(/,/g, '')) || 0;
+        totalReq += val;
+      });
+      
+      // Update HTML UI with "ITEMS"
+      document.getElementById('totalRequestLabel').textContent = totalReq.toLocaleString('en-US') + ' ITEMS';
+      return totalReq;
+    }
+
     function addRow(data = {}) {
       const tbody = document.querySelector("#stockTable tbody");
       const row = document.createElement("tr");
       
       const uomValue = data.uom || "TABS";
-      const uomOptions = ["TABS", "CAPS", "BOXS", "PFS", "VIALS", "AMPS"];
       let uomSelectHTML = `<select required class="uom-select" onchange="autoSaveDraft()">`;
-      uomOptions.forEach(opt => {
+      globalUomOptions.forEach(opt => {
         uomSelectHTML += `<option value="${opt}" ${uomValue === opt ? 'selected' : ''}>${opt}</option>`;
       });
+      
+      if (uomValue && !globalUomOptions.includes(uomValue)) {
+         uomSelectHTML += `<option value="${uomValue}" selected>${uomValue} (Removed)</option>`;
+      }
       uomSelectHTML += `</select>`;
 
       row.innerHTML = `
@@ -755,7 +914,7 @@
         <td><input type="text" placeholder="Code" value="${data.stock_code || ""}" required></td>
         <td><input type="text" placeholder="Description" value="${data.product_description || ""}" required></td>
         <td><input type="text" placeholder="0" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
-        <td><input type="text" placeholder="Bin/Loc" value="${data.location || ""}" required></td>
+        <td><input type="text" placeholder="Bin/Loc" style="text-align:center;" value="${data.location || ""}" required></td>
         <td><input type="text" placeholder="0" value="${data.qty_requested || ""}" required class="qty-requested"></td>
         <td>${uomSelectHTML}</td>
         <td><input type="text" placeholder="0" value="${data.total || ""}" readonly class="total-cell"></td>
@@ -766,7 +925,8 @@
       `;
       tbody.appendChild(row);
       
-      updateRowNumbers(); // Update numbering after adding
+      updateRowNumbers(); 
+      updateTotalRequest(); 
       
       const onhandInput = row.querySelector('.qty-onhand');
       const requestedInput = row.querySelector('.qty-requested');
@@ -788,6 +948,7 @@
       requestedInput.addEventListener('input', function() {
         this.value = formatNumber(this.value);
         calculateTotal();
+        updateTotalRequest();
       });
       
       row.querySelectorAll('input, select, textarea').forEach(el => {
@@ -800,7 +961,8 @@
 
     function removeRow(btn) {
       btn.closest("tr").remove();
-      updateRowNumbers(); // Update numbering after removing
+      updateRowNumbers();
+      updateTotalRequest();
       autoSaveDraft();
     }
 
@@ -863,7 +1025,6 @@
         transferFinal: getTransferValue(),
         rows: Array.from(document.querySelectorAll("#stockTable tbody tr")).map((tr) => {
           return {
-            // Note: In-adjust ang nth-child dahil nandiyan na si column 1 (row-number)
             stock_code: tr.querySelector('td:nth-child(2) input').value,
             product_description: tr.querySelector('td:nth-child(3) input').value,
             qty_onhand: tr.querySelector('td:nth-child(4) input').value, 
@@ -906,6 +1067,7 @@
       if (data.rows.length === 0) addRow();
       
       document.getElementById("stockForm").addEventListener("input", autoSaveDraft);
+      updateTotalRequest();
     }
 
     function clearDraftForm() {
@@ -921,6 +1083,7 @@
       document.querySelector("#stockTable tbody").innerHTML = "";
       addRow();
       localStorage.removeItem("stockDraft");
+      updateTotalRequest();
     }
 
     function saveToHistory(data) {
@@ -1030,40 +1193,46 @@
         margin: { left: startX, right: startX }
       });
       
-      // Idinagdag ang "#" sa Headers
       const headers = ["#", "Stock Code", "Product Description", "Qty Onhand", "Location (Bin)", "Qty Req", "UOM", "Total", "Remarks"];
       
-      // Idinagdag ang index + 1 para sa numbering ng bawat item
-      const rows = data.rows.map((r, index) => [
-        index + 1, r.stock_code, r.product_description, r.qty_onhand, r.location, r.qty_requested, r.uom, r.total,
-        r.remarks ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim() : ""
-      ]);
+      let totalReq = 0;
+      const rows = data.rows.map((r, index) => {
+        totalReq += parseInt(r.qty_requested.replace(/,/g, '')) || 0;
+        return [
+          index + 1, r.stock_code, r.product_description, r.qty_onhand, r.location, r.qty_requested, r.uom, r.total,
+          r.remarks ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim() : ""
+        ];
+      });
 
-      // Na-adjust ang colWidths para sa idinagdag na number column (index 0)
-      const colWidths = {0:20, 1:60, 2:160, 3:60, 4:70, 5:60, 6:40, 7:50, 8:150};
-      const finalColWidths = {};
-      const maxUsableWidth = pageWidth - 80;
-      const totalDesiredWidth = Object.values(colWidths).reduce((a,b)=>a+b,0);
-      const scaleFactor = totalDesiredWidth > maxUsableWidth ? maxUsableWidth / totalDesiredWidth : 1;
-      Object.keys(colWidths).forEach(k => finalColWidths[k] = Math.floor(colWidths[k] * scaleFactor));
-
-      const columnStyles = {};
-      for(const idx in finalColWidths){
-        // I-center alignment ang '#', 'Qty Onhand', 'Location', 'Qty Req', 'UOM', at 'Total'
-        columnStyles[idx] = {cellWidth: finalColWidths[idx], halign: (idx == 0 || (idx >= 3 && idx <= 7)) ? "center" : "left"};
-      }
+      // EXACTLY MEASURED COLUMNS FOR FLAWLESS PDF ALIGNMENT
+      const colWidths = {
+        0: { cellWidth: 30, halign: "center" },
+        1: { cellWidth: 75, halign: "left" },
+        2: { cellWidth: 180, halign: "left" },
+        3: { cellWidth: 70, halign: "center" },
+        4: { cellWidth: 80, halign: "center" },
+        5: { cellWidth: 70, halign: "center" },
+        6: { cellWidth: 60, halign: "center" }, // Hindi na mapuputol ang "BOTTLES"
+        7: { cellWidth: 70, halign: "center" },
+        8: { cellWidth: 126, halign: "left" }
+      };
 
       doc.autoTable({
         startY: doc.lastAutoTable.finalY + 30,
         head: [headers],
         body: rows,
+        foot: [[
+          // LABEL SPANS COLUMNS 0 TO 6 (EXACTLY) - UPDATED TEXT
+          { content: "TOTAL REQUESTED PRODUCTS:", colSpan: 7, styles: { halign: "right", fontStyle: "bold", fontSize: 13, fillColor: [245, 247, 250], textColor: [0,0,0], cellPadding: 10 } },
+          // VALUE SPANS COLUMNS 7 TO 8 - UPDATED TO INCLUDE "ITEMS"
+          { content: totalReq.toLocaleString('en-US') + " ITEMS", colSpan: 2, styles: { halign: "center", fontStyle: "bold", fontSize: 16, textColor: [30, 60, 114], fillColor: [230, 240, 255], cellPadding: 10 } }
+        ]],
         theme: "grid",
-        styles: { fontSize: 9, cellPadding: 5 },
-        columnStyles: columnStyles,
+        styles: { fontSize: 9, cellPadding: 6 },
+        columnStyles: colWidths,
         headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
-        margin: { left: (pageWidth - Object.values(finalColWidths).reduce((a,b)=>a+b,0)) / 2, bottom: 60 },
+        margin: { left: 40, right: 40, bottom: 60 },
         didParseCell: function(cellData) {
-          // In-update ang index patungong 5 para sa pagkulay ng 'Qty Req' dahil nadagdag yung numbering
           if(cellData.column.index === 5 && cellData.section === 'body') {
             cellData.cell.styles.fillColor = [255, 251, 235];
             cellData.cell.styles.textColor = [180, 83, 9];
