@@ -372,7 +372,7 @@
       border-radius: 4px; position: relative; z-index: 1;
     }
 
-    td input.qty-onhand, td input.qty-requested, td input.total-cell { text-align: center; }
+    td input.qty-onhand, td input.qty-requested { text-align: center; }
 
     .row-number {
       text-align: center; font-weight: 600; color: var(--text-muted);
@@ -381,11 +381,9 @@
 
     /* Light Theme Highlight Cells */
     [data-theme="light"] .qty-requested { background-color: #fffbeb !important; font-weight: 600; color: #b45309; }
-    [data-theme="light"] .total-cell { background-color: #f1f5f9 !important; font-weight: 600; color: var(--text-main); }
     
     /* Dark Theme Highlight Cells */
     [data-theme="dark"] .qty-requested { background-color: #422006 !important; font-weight: 600; color: #fcd34d; }
-    [data-theme="dark"] .total-cell { background-color: #334155 !important; font-weight: 600; color: #f1f5f9; }
 
     /* FOOTER ROW FOR TOTAL REQUEST - Made Sticky */
     tfoot tr { border-top: 2px solid var(--border-color); }
@@ -661,29 +659,16 @@
           
           <div class="input-scroll-container">
             <table id="stockTable">
-              <!-- Exact proportionate columns for HTML view to match PDF -->
               <colgroup>
-                <col style="width: 4%;">  <!-- # -->
-                <col style="width: 10%;"> <!-- Stock Code -->
-                <col style="width: 24%;"> <!-- Product Description -->
-                <col style="width: 9%;">  <!-- Qty Onhand -->
-                <col style="width: 10%;"> <!-- Location (Bin) -->
-                <col style="width: 9%;">  <!-- Qty Req -->
-                <col style="width: 8%;">  <!-- UOM -->
-                <col style="width: 9%;">  <!-- Total -->
-                <col style="width: 13%;"> <!-- Remarks -->
-                <col style="width: 4%;">  <!-- Actions -->
-              </colgroup>
+                <col style="width: 4%;">  <col style="width: 10%;"> <col style="width: 34%;"> <col style="width: 9%;">  <col style="width: 9%;">  <col style="width: 8%;">  <col style="width: 22%;"> <col style="width: 4%;">  </colgroup>
               <thead>
                 <tr>
                   <th style="text-align: center;">#</th>
                   <th>Stock Code</th>
                   <th>Product Description</th>
                   <th style="text-align: center;">Qty Onhand</th>
-                  <th style="text-align: center;">Location (Bin)</th>
                   <th style="text-align: center;">Qty Req</th>
                   <th style="text-align: center;">UOM</th>
-                  <th style="text-align: center;">Total</th>
                   <th>Remarks</th>
                   <th style="text-align: center;"><i class="fas fa-cog"></i></th>
                 </tr>
@@ -691,9 +676,7 @@
               <tbody></tbody>
               <tfoot>
                 <tr>
-                  <!-- LABEL CELL -->
-                  <td colspan="7" class="total-label-cell">TOTAL REQUESTED PRODUCTS:</td>
-                  <!-- VALUE CELL WITH "ITEMS" TEXT -->
+                  <td colspan="5" class="total-label-cell">TOTAL REQUESTED PRODUCTS:</td>
                   <td colspan="3" id="totalRequestLabel" class="total-value-cell">0 ITEMS</td>
                 </tr>
               </tfoot>
@@ -957,10 +940,8 @@
         <td><input type="text" placeholder="Code" value="${data.stock_code || ""}" required></td>
         <td><input type="text" placeholder="Description" value="${data.product_description || ""}" required></td>
         <td><input type="text" placeholder="0" value="${data.qty_onhand || ""}" required class="qty-onhand"></td>
-        <td><input type="text" placeholder="Bin/Loc" style="text-align:center;" value="${data.location || ""}" required></td>
         <td><input type="text" placeholder="0" value="${data.qty_requested || ""}" required class="qty-requested"></td>
         <td>${uomSelectHTML}</td>
-        <td><input type="text" placeholder="0" value="${data.total || ""}" readonly class="total-cell"></td>
         <td><textarea rows="1" placeholder="Notes...">${data.remarks || ""}</textarea></td>
         <td style="text-align: center; padding: 4px;">
           <button type="button" class="remove-btn" title="Remove Row" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
@@ -973,24 +954,13 @@
       
       const onhandInput = row.querySelector('.qty-onhand');
       const requestedInput = row.querySelector('.qty-requested');
-      const totalCell = row.querySelector('.total-cell');
-      
-      const calculateTotal = () => {
-        const onhand = parseInt(onhandInput.value.replace(/,/g, '')) || 0;
-        const requested = parseInt(requestedInput.value.replace(/,/g, '')) || 0;
-        const total = onhand - requested;
-        
-        totalCell.value = total.toLocaleString('en-US');
-      };
       
       onhandInput.addEventListener('input', function() {
         this.value = formatNumber(this.value);
-        calculateTotal();
       });
       
       requestedInput.addEventListener('input', function() {
         this.value = formatNumber(this.value);
-        calculateTotal();
         updateTotalRequest();
       });
       
@@ -1071,11 +1041,9 @@
             stock_code: tr.querySelector('td:nth-child(2) input').value,
             product_description: tr.querySelector('td:nth-child(3) input').value,
             qty_onhand: tr.querySelector('td:nth-child(4) input').value, 
-            location: tr.querySelector('td:nth-child(5) input').value,
-            qty_requested: tr.querySelector('td:nth-child(6) input').value, 
-            uom: tr.querySelector('td:nth-child(7) select').value,
-            total: tr.querySelector('td:nth-child(8) input').value, 
-            remarks: tr.querySelector('td:nth-child(9) textarea').value,
+            qty_requested: tr.querySelector('td:nth-child(5) input').value, 
+            uom: tr.querySelector('td:nth-child(6) select').value,
+            remarks: tr.querySelector('td:nth-child(7) textarea').value,
           };
         }),
       };
@@ -1236,13 +1204,13 @@
         margin: { left: startX, right: startX }
       });
       
-      const headers = ["#", "Stock Code", "Product Description", "Qty Onhand", "Location (Bin)", "Qty Req", "UOM", "Total", "Remarks"];
+      const headers = ["#", "Stock Code", "Product Description", "Qty Onhand", "Qty Req", "UOM", "Remarks"];
       
       let totalReq = 0;
       const rows = data.rows.map((r, index) => {
         totalReq += parseInt(r.qty_requested.replace(/,/g, '')) || 0;
         return [
-          index + 1, r.stock_code, r.product_description, r.qty_onhand, r.location, r.qty_requested, r.uom, r.total,
+          index + 1, r.stock_code, r.product_description, r.qty_onhand, r.qty_requested, r.uom,
           r.remarks ? r.remarks.replace(/(.{1,50})(\s+|$)/g, "$1\n").trim() : ""
         ];
       });
@@ -1250,13 +1218,11 @@
       const colWidths = {
         0: { cellWidth: 30, halign: "center" },
         1: { cellWidth: 75, halign: "left" },
-        2: { cellWidth: 180, halign: "left" },
+        2: { cellWidth: 260, halign: "left" },
         3: { cellWidth: 70, halign: "center" },
-        4: { cellWidth: 80, halign: "center" },
-        5: { cellWidth: 70, halign: "center" },
-        6: { cellWidth: 60, halign: "center" },
-        7: { cellWidth: 70, halign: "center" },
-        8: { cellWidth: 126, halign: "left" }
+        4: { cellWidth: 70, halign: "center" },
+        5: { cellWidth: 60, halign: "center" },
+        6: { cellWidth: 196, halign: "left" }
       };
 
       doc.autoTable({
@@ -1264,7 +1230,7 @@
         head: [headers],
         body: rows,
         foot: [[
-          { content: "TOTAL REQUESTED PRODUCTS:", colSpan: 7, styles: { halign: "right", fontStyle: "bold", fontSize: 13, fillColor: [245, 247, 250], textColor: [0,0,0], cellPadding: 10 } },
+          { content: "TOTAL REQUESTED PRODUCTS:", colSpan: 5, styles: { halign: "right", fontStyle: "bold", fontSize: 13, fillColor: [245, 247, 250], textColor: [0,0,0], cellPadding: 10 } },
           { content: totalReq.toLocaleString('en-US') + " ITEMS", colSpan: 2, styles: { halign: "center", fontStyle: "bold", fontSize: 16, textColor: [30, 60, 114], fillColor: [230, 240, 255], cellPadding: 10 } }
         ]],
         showFoot: 'lastPage', // <-- THIS FIXES THE DOUBLE FOOTER ISSUE
@@ -1274,7 +1240,7 @@
         headStyles: { fillColor: [30, 60, 114], textColor: 255, halign: "center" },
         margin: { left: 40, right: 40, bottom: 60 },
         didParseCell: function(cellData) {
-          if(cellData.column.index === 5 && cellData.section === 'body') {
+          if(cellData.column.index === 4 && cellData.section === 'body') {
             cellData.cell.styles.fillColor = [255, 251, 235];
             cellData.cell.styles.textColor = [180, 83, 9];
             cellData.cell.styles.fontStyle = "bold";
